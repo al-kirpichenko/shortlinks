@@ -36,6 +36,11 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 
 		shortUrl := baseUrl + request.URL.String()
 
+		if shortUrl == "" {
+			writer.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
 		for k, v := range linkListShorts {
 			if k == shortUrl {
 				writer.Header().Set("Location", v)
