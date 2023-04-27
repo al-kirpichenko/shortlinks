@@ -11,7 +11,6 @@ const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const baseUrl = "http://localhost:8080"
 
 var (
-	linkList       map[string]string
 	linkListShorts map[string]string
 )
 
@@ -28,11 +27,9 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 
 			shortUrl := baseUrl + "/" + shorting()
 
-			linkList[longUrl] = shortUrl
-
 			linkListShorts[shortUrl] = longUrl
 
-			io.WriteString(writer, linkList[longUrl])
+			io.WriteString(writer, shortUrl)
 		}
 	} else if request.Method == http.MethodGet {
 
@@ -40,8 +37,8 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 
 		for k, v := range linkListShorts {
 			if k == shortUrl {
-
-				http.Redirect(writer, request, v, 307)
+				writer.Header().Set("Location", v)
+				writer.WriteHeader(http.StatusTemporaryRedirect)
 				return
 			}
 		}
@@ -75,7 +72,6 @@ func isValidUrl(token string) bool {
 
 func main() {
 
-	linkList = map[string]string{}
 	linkListShorts = map[string]string{}
 
 	mux := http.NewServeMux()
