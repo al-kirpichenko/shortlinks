@@ -24,6 +24,7 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 		if isValidUrl(longUrl) {
 
 			writer.Header().Set("content-type", "text/plain")
+			writer.WriteHeader(http.StatusCreated)
 
 			shortUrl := baseUrl + "/" + shorting()
 
