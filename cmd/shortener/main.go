@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
 )
@@ -21,13 +22,16 @@ func main() {
 
 func shortenURL(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		err := r.ParseForm()
+		responseData, err := io.ReadAll(r.Body)
 		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
+			http.Error(w, fmt.Sprintf("cannot read request body: %s", err), http.StatusBadRequest)
 			return
 		}
-
-		url := r.FormValue("")
+		if string(responseData) == "" {
+			http.Error(w, "Empty POST request body!", http.StatusBadRequest)
+			return
+		}
+		url := string(responseData)
 		if url == "" {
 			w.WriteHeader(http.StatusBadRequest)
 			return
