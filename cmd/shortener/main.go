@@ -41,13 +41,8 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 			writer.WriteHeader(http.StatusTemporaryRedirect)
 		}
 
-		for k, v := range linkListShorts {
-			if k == shortUrl {
-				writer.Header().Set("Location", v)
-				writer.WriteHeader(http.StatusTemporaryRedirect)
-				return
-			}
-		}
+		writer.Header().Set("Location", linkListShorts[shortUrl])
+		writer.WriteHeader(http.StatusTemporaryRedirect)
 
 	} else {
 		writer.WriteHeader(http.StatusBadRequest)
