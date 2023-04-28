@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 )
@@ -11,8 +10,13 @@ var urls map[string]string
 
 func main() {
 	urls = make(map[string]string)
-	http.HandleFunc("/", shortenURL)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", shortenURL)
+	err := http.ListenAndServe(`:8080`, mux)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func shortenURL(w http.ResponseWriter, r *http.Request) {
@@ -41,8 +45,8 @@ func shortenURL(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Invalid URL", http.StatusBadRequest)
 			return
 		}
-		//fmt.Println(url)
-		w.Header().Add("Location", url)
+		fmt.Println(url)
+		w.Header().Set("Location", url)
 		w.WriteHeader(http.StatusTemporaryRedirect)
 		return
 	} else {
