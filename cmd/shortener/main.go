@@ -30,7 +30,7 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 			linkListShorts[shortUrl] = longUrl
 
 			writer.WriteHeader(http.StatusCreated)
-			fmt.Fprintf(writer, shortUrl)
+			fmt.Fprint(writer, shortUrl)
 
 			return
 		}
