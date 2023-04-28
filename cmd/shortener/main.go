@@ -22,6 +22,9 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 			return
 		}
 		longUrl := request.FormValue("")
+		if longUrl == "" {
+			writer.WriteHeader(http.StatusCreated)
+		}
 		if isValidUrl(longUrl) {
 
 			shortUrl := baseUrl + "/" + shorting()
