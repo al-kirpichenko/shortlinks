@@ -18,7 +18,6 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == http.MethodPost {
 		err := request.ParseForm()
 		if err != nil {
-			writer.WriteHeader(http.StatusCreated)
 			return
 		}
 		longUrl := request.FormValue("")
@@ -38,10 +37,8 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 	} else if request.Method == http.MethodGet {
 
 		shortUrl := baseUrl + request.URL.String()
-
 		if shortUrl == "" {
-			writer.WriteHeader(http.StatusBadRequest)
-			return
+			writer.WriteHeader(http.StatusTemporaryRedirect)
 		}
 
 		for k, v := range linkListShorts {
