@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"net/url"
@@ -18,19 +18,19 @@ func mainPage(writer http.ResponseWriter, request *http.Request) {
 	if request.Method == http.MethodPost {
 		err := request.ParseForm()
 		if err != nil {
+			writer.WriteHeader(http.StatusCreated)
 			return
 		}
 		longUrl := request.FormValue("")
 		if isValidUrl(longUrl) {
 
-			writer.Header().Set("content-type", "text/plain")
-			writer.WriteHeader(http.StatusCreated)
-
 			shortUrl := baseUrl + "/" + shorting()
-
 			linkListShorts[shortUrl] = longUrl
 
-			io.WriteString(writer, shortUrl)
+			writer.WriteHeader(http.StatusCreated)
+			fmt.Fprintf(writer, shortUrl)
+
+			return
 		}
 	} else if request.Method == http.MethodGet {
 
