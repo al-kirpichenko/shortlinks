@@ -29,7 +29,10 @@ func shortenURL(w http.ResponseWriter, r *http.Request) {
 		response := fmt.Sprintf("http://localhost:8080/%s", id)
 		w.Header().Set("Content-Type", "text/plain")
 		w.WriteHeader(http.StatusCreated)
-		w.Write([]byte(response))
+		_, err = w.Write([]byte(response))
+		if err != nil {
+			return
+		}
 
 	} else if r.Method == http.MethodGet {
 		id := r.URL.Path[1:]
@@ -38,7 +41,7 @@ func shortenURL(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Invalid URL", http.StatusBadRequest)
 			return
 		}
-
+		//fmt.Println(url)
 		w.Header().Add("Location", url)
 		w.WriteHeader(http.StatusTemporaryRedirect)
 		return
