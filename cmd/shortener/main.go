@@ -23,11 +23,15 @@ func shortenURL(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
 		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		url := r.FormValue("")
-
+		if url == "" {
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 		id := generateID()
 		urls[id] = url
 		response := fmt.Sprintf("http://localhost:8080/%s", id)
@@ -45,7 +49,6 @@ func shortenURL(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Invalid URL", http.StatusBadRequest)
 			return
 		}
-		fmt.Println(url)
 		w.Header().Set("Location", url)
 		w.WriteHeader(http.StatusTemporaryRedirect)
 		return
