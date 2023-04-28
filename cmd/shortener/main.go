@@ -2,85 +2,57 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
-	"net/url"
 )
 
-const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-const baseUrl = "http://localhost:8080"
+var urls map[string]string
 
-var (
-	linkListShorts map[string]string
-)
+func main() {
+	urls = make(map[string]string)
+	http.HandleFunc("/", shortenURL)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
 
-func mainPage(writer http.ResponseWriter, request *http.Request) {
-	if request.Method == http.MethodPost {
-		err := request.ParseForm()
+func shortenURL(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		err := r.ParseForm()
 		if err != nil {
 			return
 		}
-		longUrl := request.FormValue("")
-		if longUrl == "" {
-			writer.WriteHeader(http.StatusCreated)
-		}
-		if isValidUrl(longUrl) {
 
-			shortUrl := baseUrl + "/" + shorting()
-			linkListShorts[shortUrl] = longUrl
+		url := r.FormValue("")
 
-			writer.WriteHeader(http.StatusCreated)
-			fmt.Fprint(writer, shortUrl)
+		id := generateID()
+		urls[id] = url
+		response := fmt.Sprintf("http://localhost:8080/%s", id)
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte(response))
 
+	} else if r.Method == http.MethodGet {
+		id := r.URL.Path[1:]
+		url, ok := urls[id]
+		if !ok {
+			http.Error(w, "Invalid URL", http.StatusBadRequest)
 			return
 		}
-	} else if request.Method == http.MethodGet {
 
-		shortUrl := baseUrl + request.URL.String()
-		if shortUrl == "" {
-			writer.WriteHeader(http.StatusTemporaryRedirect)
-		}
-		writer.Header().Set("Location", linkListShorts[shortUrl])
-		writer.WriteHeader(http.StatusTemporaryRedirect)
-
-		//fmt.Fprintf(writer, linkListShorts[shortUrl])
-
+		w.Header().Add("Location", url)
+		w.WriteHeader(http.StatusTemporaryRedirect)
+		return
 	} else {
-		writer.WriteHeader(http.StatusBadRequest)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-
 }
 
-func shorting() string {
-	b := make([]byte, 6)
+func generateID() string {
+	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	b := make([]rune, 8)
 	for i := range b {
-		b[i] = letterBytes[rand.Intn(len(letterBytes))]
+		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
-}
-
-func isValidUrl(token string) bool {
-	_, err := url.ParseRequestURI(token)
-	if err != nil {
-		return false
-	}
-	u, err := url.Parse(token)
-	if err != nil || u.Host == "" {
-		return false
-	}
-	return true
-}
-
-func main() {
-
-	linkListShorts = map[string]string{}
-
-	mux := http.NewServeMux()
-	mux.HandleFunc(`/`, mainPage)
-
-	err := http.ListenAndServe(`:8080`, mux)
-	if err != nil {
-		panic(err)
-	}
 }
