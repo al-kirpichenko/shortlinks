@@ -19,7 +19,7 @@ func Test_shortenURL(t *testing.T) {
 		contentType string
 		location    string
 	}
-	testUrl := "https://yandex.ru"
+	testURL := "https://yandex.ru"
 
 	tests := []struct {
 		name   string
@@ -29,7 +29,7 @@ func Test_shortenURL(t *testing.T) {
 	}{
 		{
 			name:   "test post #1",
-			url:    testUrl,
+			url:    testURL,
 			method: http.MethodPost,
 			want: want{
 				code:        201,
@@ -48,7 +48,7 @@ func Test_shortenURL(t *testing.T) {
 
 			url := w.Body.String()
 
-			testUrls[testUrl] = url
+			testUrls[testURL] = url
 
 			assert.Equal(t, test.want.code, w.Code, "Код ответа не совпадает с ожидаемым")
 
@@ -63,7 +63,7 @@ func Test_shortenURL(t *testing.T) {
 			//t.Log("w2.Location" + w2.Header().Get("Location"))
 
 			assert.Equal(t, 307, w2.Code, "Код ответа (307) не совпадает с ожидаемым")
-			assert.Equal(t, testUrl, w2.Header().Get("Location"), "Location не совпадает с ожидаемым")
+			assert.Equal(t, testURL, w2.Header().Get("Location"), "Location не совпадает с ожидаемым")
 
 		})
 	}
