@@ -45,7 +45,7 @@ func shortenURL(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			return
 		}
-
+		return
 	} else if r.Method == http.MethodGet {
 		id := r.URL.Path[1:]
 		url, ok := urls[id]
