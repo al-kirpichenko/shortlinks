@@ -45,9 +45,6 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	if err != nil {
-		return
-	}
 	return
 }
 
@@ -56,9 +53,7 @@ func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 	url, ok := urls[id]
 	if !ok {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
-		return
 	}
 	w.Header().Set("Location", url)
 	w.WriteHeader(http.StatusTemporaryRedirect)
-	return
 }
