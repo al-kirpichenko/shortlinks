@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -10,8 +11,7 @@ import (
 
 var testUrls map[string]string
 
-func Test_shortenURL(t *testing.T) {
-	urls = make(map[string]string)
+func Test_GetShortURL(t *testing.T) {
 
 	testUrls = make(map[string]string)
 	type want struct {
@@ -44,7 +44,7 @@ func Test_shortenURL(t *testing.T) {
 
 			w := httptest.NewRecorder()
 
-			shortenURL(w, r)
+			app.GetShortURL(w, r)
 
 			url := w.Body.String()
 
@@ -52,15 +52,11 @@ func Test_shortenURL(t *testing.T) {
 
 			assert.Equal(t, test.want.code, w.Code, "Код ответа не совпадает с ожидаемым")
 
-			t.Log("w.Body" + url)
-
 			r2 := httptest.NewRequest(http.MethodGet, url, nil)
 
 			w2 := httptest.NewRecorder()
 
-			shortenURL(w2, r2)
-
-			//t.Log("w2.Location" + w2.Header().Get("Location"))
+			app.GetOriginalURL(w2, r2)
 
 			assert.Equal(t, 307, w2.Code, "Код ответа (307) не совпадает с ожидаемым")
 			assert.Equal(t, testURL, w2.Header().Get("Location"), "Location не совпадает с ожидаемым")
