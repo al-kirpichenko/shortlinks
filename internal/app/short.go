@@ -45,7 +45,6 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	return
 }
 
 func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
