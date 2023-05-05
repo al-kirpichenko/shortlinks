@@ -10,6 +10,8 @@ var AppConfig struct {
 	ResultURL string
 }
 
+//инициализируем флаги и переменные окружения
+
 func init() {
 
 	if host := os.Getenv("SERVER_ADDRESS"); host != "" {
