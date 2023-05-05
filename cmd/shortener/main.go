@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"github.com/al-kirpichenko/shortlinks/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/go-chi/chi/v5"
 	"log"
@@ -14,5 +16,7 @@ func main() {
 	router.Get("/{id}", app.GetOriginalURL)
 	router.Post("/", app.GetShortURL)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	flag.Parse()
+
+	log.Fatal(http.ListenAndServe(config.AppConfig.Host, router))
 }
