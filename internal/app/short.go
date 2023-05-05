@@ -32,10 +32,7 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	url := string(responseData)
-	if url == "" {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+
 	id := generateID()
 	urls[id] = url
 	response := fmt.Sprintf(config.AppConfig.ResultURL+"/%s", id)
