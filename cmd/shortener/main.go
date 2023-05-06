@@ -3,18 +3,14 @@ package main
 import (
 	"flag"
 	"github.com/al-kirpichenko/shortlinks/config"
-	"github.com/al-kirpichenko/shortlinks/internal/app"
-	"github.com/go-chi/chi/v5"
+	"github.com/al-kirpichenko/shortlinks/internal/routes"
 	"log"
 	"net/http"
 )
 
 func main() {
 
-	router := chi.NewRouter()
-
-	router.Get("/{id}", app.GetOriginalURL)
-	router.Post("/", app.GetShortURL)
+	router := routes.Route()
 
 	flag.Parse()
 
