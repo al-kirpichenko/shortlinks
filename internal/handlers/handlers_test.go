@@ -1,7 +1,6 @@
-package main
+package handlers
 
 import (
-	"github.com/al-kirpichenko/shortlinks/internal/handlers"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -44,7 +43,7 @@ func Test_GetShortURL(t *testing.T) {
 
 			w := httptest.NewRecorder()
 
-			handlers.GetShortURL(w, r)
+			GetShortURL(w, r)
 
 			url := w.Body.String()
 
@@ -56,7 +55,7 @@ func Test_GetShortURL(t *testing.T) {
 
 			w2 := httptest.NewRecorder()
 
-			handlers.GetOriginalURL(w2, r2)
+			GetOriginalURL(w2, r2)
 
 			assert.Equal(t, 307, w2.Code, "Код ответа (307) не совпадает с ожидаемым")
 			assert.Equal(t, testURL, w2.Header().Get("Location"), "Location не совпадает с ожидаемым")
