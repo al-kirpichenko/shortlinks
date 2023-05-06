@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"github.com/al-kirpichenko/shortlinks/internal/random"
+	"github.com/al-kirpichenko/shortlinks/internal/shortlinkgen"
 	"io"
 	"net/http"
 )
@@ -20,7 +20,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 	url := string(responseData)
 
-	id := random.GenerateID()
+	id := shortlinkgen.GenerateID()
 
 	a.storage.Urls[id] = url
 

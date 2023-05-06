@@ -1,4 +1,4 @@
-package random
+package shortlinkgen
 
 import "math/rand"
 
