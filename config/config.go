@@ -6,22 +6,28 @@ import (
 	"strings"
 )
 
-var AppConfig struct {
+//var AppConfig struct {
+//	Host      string
+//	ResultURL string
+//}
+
+type AppConfig struct {
 	Host      string
 	ResultURL string
 }
 
-//инициализируем флаги и переменные окружения
+func GetCfg() *AppConfig {
 
-func init() {
+	a := &AppConfig{}
 
-	flag.StringVar(&AppConfig.Host, "a", "localhost:8080", "It's a Host")
-	flag.StringVar(&AppConfig.ResultURL, "b", "http://localhost:8080", "It's a Result URL")
+	flag.StringVar(&a.Host, "a", "localhost:8080", "It's a Host")
+	flag.StringVar(&a.ResultURL, "b", "http://localhost:8080", "It's a Result URL")
 
 	if baseURL := os.Getenv("BASE_URL"); baseURL != "" {
-		AppConfig.ResultURL = strings.TrimSpace(baseURL)
+		a.ResultURL = strings.TrimSpace(baseURL)
 	}
 	if host := os.Getenv("SERVER_ADDRESS"); host != "" {
-		AppConfig.Host = strings.TrimSpace(host)
+		a.Host = strings.TrimSpace(host)
 	}
+	return a
 }

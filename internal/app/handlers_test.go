@@ -1,6 +1,7 @@
-package handlers
+package app
 
 import (
+	"github.com/al-kirpichenko/shortlinks/config"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -13,6 +14,7 @@ var testUrls map[string]string
 func Test_GetShortURL(t *testing.T) {
 
 	testUrls = make(map[string]string)
+
 	type want struct {
 		code        int
 		contentType string
@@ -37,6 +39,9 @@ func Test_GetShortURL(t *testing.T) {
 		},
 	}
 
+	conf := config.GetCfg()
+	app := NewApp(conf)
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
@@ -44,7 +49,7 @@ func Test_GetShortURL(t *testing.T) {
 
 			w := httptest.NewRecorder()
 
-			GetShortURL(w, r)
+			app.GetShortURL(w, r)
 
 			url := w.Body.String()
 
@@ -56,7 +61,7 @@ func Test_GetShortURL(t *testing.T) {
 
 			w2 := httptest.NewRecorder()
 
-			GetOriginalURL(w2, r2)
+			app.GetOriginalURL(w2, r2)
 
 			assert.Equal(t, 307, w2.Code, "Код ответа (307) не совпадает с ожидаемым")
 			assert.Equal(t, testURL, w2.Header().Get("Location"), "Location не совпадает с ожидаемым")

@@ -1,15 +1,13 @@
-package handlers
+package app
 
 import (
 	"fmt"
-	"github.com/al-kirpichenko/shortlinks/config"
 	"github.com/al-kirpichenko/shortlinks/internal/random"
-	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"io"
 	"net/http"
 )
 
-func GetShortURL(w http.ResponseWriter, r *http.Request) {
+func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	responseData, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -24,9 +22,9 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := random.GenerateID()
 
-	storage.SetURL(url, id)
+	a.storage.Urls[id] = url
 
-	response := fmt.Sprintf(config.AppConfig.ResultURL+"/%s", id)
+	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
 
@@ -36,16 +34,15 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
+func (a *App) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Path[1:]
 
-	//id := chi.URLParam(r, "id")
+	url, ok := a.storage.Urls[id]
 
-	url, err := storage.GetURL(id)
-
-	if err != nil {
+	if !ok {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
 	}
+
 	w.Header().Set("Location", url)
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }

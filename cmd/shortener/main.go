@@ -10,9 +10,11 @@ import (
 
 func main() {
 
-	router := routes.Route()
+	conf := config.GetCfg()
+
+	router := routes.Route(conf)
 
 	flag.Parse()
 
-	log.Fatal(http.ListenAndServe(config.AppConfig.Host, router))
+	log.Fatal(http.ListenAndServe(conf.Host, router))
 }
