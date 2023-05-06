@@ -1,23 +1,14 @@
-package app
+package handlers
 
 import (
 	"fmt"
 	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/al-kirpichenko/shortlinks/internal/random"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"github.com/go-chi/chi/v5"
 	"io"
-	"math/rand"
 	"net/http"
 )
-
-func generateID() string {
-	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	b := make([]rune, 8)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
-}
 
 func GetShortURL(w http.ResponseWriter, r *http.Request) {
 
@@ -32,7 +23,7 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 	url := string(responseData)
 
-	id := generateID()
+	id := random.GenerateID()
 
 	storage.SetURL(url, id)
 
