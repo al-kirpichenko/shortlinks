@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/go-chi/chi/v5"
 	"io"
 	"math/rand"
 	"net/http"
@@ -46,7 +47,10 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
-	id := r.URL.Path[1:]
+	//id := r.URL.Path[1:]
+
+	id := chi.URLParam(r, "id")
+
 	url, ok := urls[id]
 	if !ok {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
