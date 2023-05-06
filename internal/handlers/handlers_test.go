@@ -39,6 +39,7 @@ func Test_GetShortURL(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
+
 			r := httptest.NewRequest(test.method, "https://localhost:8080", strings.NewReader(test.url))
 
 			w := httptest.NewRecorder()

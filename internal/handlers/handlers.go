@@ -41,8 +41,6 @@ func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 
 	//id := chi.URLParam(r, "id")
 
-	//url, ok := urls[id]
-
 	url, err := storage.GetURL(id)
 
 	if err != nil {
