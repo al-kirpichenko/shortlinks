@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"github.com/go-chi/chi/v5"
 	"io"
 	"math/rand"
@@ -33,7 +34,7 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := generateID()
 
-	SetURL(url, id)
+	storage.SetURL(url, id)
 
 	response := fmt.Sprintf(config.AppConfig.ResultURL+"/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
@@ -52,7 +53,7 @@ func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 
 	//url, ok := urls[id]
 
-	url, err := GetURL(id)
+	url, err := storage.GetURL(id)
 
 	if err != nil {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
