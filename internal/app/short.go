@@ -9,8 +9,6 @@ import (
 	"net/http"
 )
 
-var urls map[string]string
-
 func generateID() string {
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	b := make([]rune, 8)
@@ -22,7 +20,6 @@ func generateID() string {
 
 func GetShortURL(w http.ResponseWriter, r *http.Request) {
 
-	urls = make(map[string]string)
 	responseData, err := io.ReadAll(r.Body)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("cannot read request body: %s", err), http.StatusBadRequest)
@@ -35,7 +32,9 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 	url := string(responseData)
 
 	id := generateID()
-	urls[id] = url
+
+	SetURL(url, id)
+
 	response := fmt.Sprintf(config.AppConfig.ResultURL+"/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
@@ -51,8 +50,11 @@ func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	url, ok := urls[id]
-	if !ok {
+	//url, ok := urls[id]
+
+	url, err := GetURL(id)
+
+	if err != nil {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
 	}
 	w.Header().Set("Location", url)
