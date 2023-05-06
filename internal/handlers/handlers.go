@@ -5,7 +5,6 @@ import (
 	"github.com/al-kirpichenko/shortlinks/config"
 	"github.com/al-kirpichenko/shortlinks/internal/random"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
-	"github.com/go-chi/chi/v5"
 	"io"
 	"net/http"
 )
@@ -38,9 +37,9 @@ func GetShortURL(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetOriginalURL(w http.ResponseWriter, r *http.Request) {
-	//id := r.URL.Path[1:]
+	id := r.URL.Path[1:]
 
-	id := chi.URLParam(r, "id")
+	//id := chi.URLParam(r, "id")
 
 	//url, ok := urls[id]
 
