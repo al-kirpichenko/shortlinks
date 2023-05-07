@@ -1,7 +1,9 @@
 package app
 
 import (
+	"context"
 	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -60,6 +62,14 @@ func Test_GetShortURL(t *testing.T) {
 			r2 := httptest.NewRequest(http.MethodGet, url, nil)
 
 			w2 := httptest.NewRecorder()
+
+			router := chi.NewRouteContext()
+
+			slice := strings.Split(url, "/")
+
+			router.URLParams.Add("id", slice[:][3])
+
+			r2 = r2.WithContext(context.WithValue(r2.Context(), chi.RouteCtxKey, router))
 
 			app.GetOriginalURL(w2, r2)
 
