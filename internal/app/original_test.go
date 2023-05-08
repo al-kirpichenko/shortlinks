@@ -20,27 +20,45 @@ func Test_GetOriginalURL(t *testing.T) {
 	conf := config.GetCfg()
 	app := NewApp(conf)
 
-	testID := "vRFgdzs"
+	resultURL := "https://yandex.ru"
 
-	testURL := "https://yandex.ru"
+	type want struct {
+		code     int
+		location string
+	}
 
-	servAddr := "http://localhost:8080"
+	type testInf struct {
+		method string
+		url    string
+		testID string
+		want   want
+	}
 
-	app.storage.SetURL(testID, testURL)
+	test := testInf{
+		method: http.MethodGet,
+		url:    "http://localhost:8080/vRFgdzs",
+		testID: "vRFgdzs",
+		want: want{
+			code:     307,
+			location: resultURL,
+		},
+	}
 
-	r := httptest.NewRequest(http.MethodGet, servAddr+"/"+testID, nil)
+	app.storage.SetURL(test.testID, resultURL)
+
+	r := httptest.NewRequest(http.MethodGet, test.url, nil)
 
 	w := httptest.NewRecorder()
 
 	router := chi.NewRouteContext()
 
-	router.URLParams.Add("id", testID)
+	router.URLParams.Add("id", test.testID)
 
 	r = r.WithContext(context.WithValue(r.Context(), chi.RouteCtxKey, router))
 
 	app.GetOriginalURL(w, r)
 
 	assert.Equal(t, 307, w.Code, "Код ответа (307) не совпадает с ожидаемым")
-	assert.Equal(t, testURL, w.Header().Get("Location"), "Location не совпадает с ожидаемым")
+	assert.Equal(t, test.want.location, w.Header().Get("Location"), "Location не совпадает с ожидаемым")
 
 }
