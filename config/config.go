@@ -6,11 +6,6 @@ import (
 	"strings"
 )
 
-//var AppConfig struct {
-//	Host      string
-//	ResultURL string
-//}
-
 type AppConfig struct {
 	Host      string
 	ResultURL string

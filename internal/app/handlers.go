@@ -23,7 +23,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := shortlinkgen.GenerateID()
 
-	a.storage.Urls[id] = url
+	a.storage.SetURL(id, url)
 
 	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
@@ -36,11 +36,12 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
-	//id := r.URL.Path[1:]
-	id := chi.URLParam(r, "id")
-	url, ok := a.storage.Urls[id]
 
-	if !ok {
+	id := chi.URLParam(r, "id")
+
+	url, err := a.storage.GetURL(id)
+
+	if err != nil {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
 	}
 
