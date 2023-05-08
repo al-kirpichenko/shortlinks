@@ -13,9 +13,7 @@ type App struct {
 func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{
-		cfg: cfg,
-		storage: &storage.Storage{
-			Urls: make(map[string]string),
-		},
+		cfg:     cfg,
+		storage: storage.NewStorage(),
 	}
 }
