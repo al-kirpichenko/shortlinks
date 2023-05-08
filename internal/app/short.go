@@ -3,7 +3,6 @@ package app
 import (
 	"fmt"
 	"github.com/al-kirpichenko/shortlinks/internal/shortlinkgen"
-	"github.com/go-chi/chi/v5"
 	"io"
 	"net/http"
 )
@@ -33,18 +32,4 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-}
-
-func (a *App) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
-
-	id := chi.URLParam(r, "id")
-
-	url, err := a.storage.GetURL(id)
-
-	if err != nil {
-		http.Error(w, "Invalid URL", http.StatusBadRequest)
-	}
-
-	w.Header().Set("Location", url)
-	w.WriteHeader(http.StatusTemporaryRedirect)
 }
