@@ -38,7 +38,7 @@ func Test_GetShortURL(t *testing.T) {
 		},
 	}
 
-	conf := config.GetCfg()
+	conf := config.NewCfg()
 	app := NewApp(conf)
 
 	r := httptest.NewRequest(test.method, "https://localhost:8080", strings.NewReader(test.url))

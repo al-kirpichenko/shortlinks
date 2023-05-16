@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	conf := config.GetCfg()
+	conf := config.NewCfg()
 
 	router := routes.Route(conf)
 

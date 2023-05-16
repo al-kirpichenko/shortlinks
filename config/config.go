@@ -11,7 +11,7 @@ type AppConfig struct {
 	ResultURL string
 }
 
-func GetCfg() *AppConfig {
+func NewCfg() *AppConfig {
 
 	a := &AppConfig{}
 
