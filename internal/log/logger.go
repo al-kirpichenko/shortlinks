@@ -46,13 +46,10 @@ func WithLogging(h http.HandlerFunc) http.HandlerFunc {
 			// вызываем панику, если ошибка
 			panic(err)
 		}
-		defer func(logger *zap.Logger) {
-			err := logger.Sync()
-			if err != nil {
-				// вызываем панику, если ошибка
-				panic(err)
-			}
-		}(logger)
+
+		defer func() {
+			err = logger.Sync()
+		}()
 
 		// делаем регистратор SugaredLogger
 		sugar = *logger.Sugar()
