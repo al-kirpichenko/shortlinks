@@ -6,8 +6,6 @@ import (
 	"time"
 )
 
-var sugar zap.SugaredLogger
-
 type (
 	// берём структуру для хранения сведений об ответе
 	responseData struct {
@@ -52,7 +50,7 @@ func WithLogging(h http.HandlerFunc) http.HandlerFunc {
 		}()
 
 		// делаем регистратор SugaredLogger
-		sugar = *logger.Sugar()
+		sugar := *logger.Sugar()
 
 		start := time.Now()
 
@@ -76,5 +74,5 @@ func WithLogging(h http.HandlerFunc) http.HandlerFunc {
 			"size", responseData.size, // получаем перехваченный размер ответа
 		)
 	}
-	return http.HandlerFunc(logFn)
+	return logFn
 }
