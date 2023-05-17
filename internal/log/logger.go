@@ -49,7 +49,8 @@ func WithLogging(h http.HandlerFunc) http.HandlerFunc {
 		defer func(logger *zap.Logger) {
 			err := logger.Sync()
 			if err != nil {
-
+				// вызываем панику, если ошибка
+				panic(err)
 			}
 		}(logger)
 
