@@ -40,6 +40,22 @@ func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 
 func WithLogging(h http.HandlerFunc) http.HandlerFunc {
 	logFn := func(w http.ResponseWriter, r *http.Request) {
+
+		logger, err := zap.NewDevelopment()
+		if err != nil {
+			// вызываем панику, если ошибка
+			panic(err)
+		}
+		defer func(logger *zap.Logger) {
+			err := logger.Sync()
+			if err != nil {
+
+			}
+		}(logger)
+
+		// делаем регистратор SugaredLogger
+		sugar = *logger.Sugar()
+
 		start := time.Now()
 
 		responseData := &responseData{
