@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func Route(cfg *config.AppConfig) http.Handler {
+func GetRouter(cfg *config.AppConfig) http.Handler {
 
 	newApp := app.NewApp(cfg)
 	router := chi.NewRouter()

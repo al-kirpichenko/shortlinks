@@ -11,7 +11,7 @@ import (
 func main() {
 
 	conf := config.NewCfg()
-	router := routes.Route(conf)
+	router := routes.GetRouter(conf)
 	flag.Parse()
 	log.Fatal(http.ListenAndServe(conf.Host, router))
 
