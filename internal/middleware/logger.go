@@ -1,4 +1,4 @@
-package logger
+package middleware
 
 import (
 	"go.uber.org/zap"
@@ -36,9 +36,9 @@ func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 // WithLogging добавляет дополнительный код для регистрации сведений о запросе
 // и возвращает новый http.Handler.
 
-func WithLogging(h http.HandlerFunc) http.HandlerFunc {
+func WithLogging(h http.Handler) http.Handler {
 
-	logFn := func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		logger, err := zap.NewDevelopment()
 		if err != nil {
@@ -74,7 +74,5 @@ func WithLogging(h http.HandlerFunc) http.HandlerFunc {
 			"duration", duration,
 			"size", responseData.size, // получаем перехваченный размер ответа
 		)
-	}
-	return logFn
-
+	})
 }
