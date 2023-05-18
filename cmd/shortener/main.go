@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/al-kirpichenko/shortlinks/internal/routes"
 	"log"
 	"net/http"
@@ -11,7 +12,9 @@ import (
 func main() {
 
 	conf := config.NewCfg()
-	router := routes.GetRouter(conf)
+	newApp := app.NewApp(conf)
+
+	router := routes.GetRouter(newApp)
 	flag.Parse()
 	log.Fatal(http.ListenAndServe(conf.Host, router))
 
