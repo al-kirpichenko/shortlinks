@@ -33,10 +33,10 @@ func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 	r.responseData.status = statusCode // захватываем код статуса
 }
 
-// WithLogging добавляет дополнительный код для регистрации сведений о запросе
+// LoggerMiddleware добавляет дополнительный код для регистрации сведений о запросе
 // и возвращает новый http.Handler.
 
-func WithLogging(h http.Handler) http.Handler {
+func LoggerMiddleware(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 

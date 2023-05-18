@@ -13,7 +13,7 @@ func GetRouter(cfg *config.AppConfig) http.Handler {
 	newApp := app.NewApp(cfg)
 	router := chi.NewRouter()
 
-	router.Use(middleware.WithLogging)
+	router.Use(middleware.LoggerMiddleware)
 	router.Use(middleware.GzipMiddleware)
 
 	router.Get("/{id}", newApp.GetOriginalURL)
