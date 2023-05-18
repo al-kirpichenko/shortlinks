@@ -91,7 +91,8 @@ func GzipMiddleware(h http.HandlerFunc) http.HandlerFunc {
 			defer func(cw *compressWriter) {
 				err := cw.Close()
 				if err != nil {
-
+					w.WriteHeader(http.StatusInternalServerError)
+					return
 				}
 			}(cw)
 		}
@@ -111,7 +112,8 @@ func GzipMiddleware(h http.HandlerFunc) http.HandlerFunc {
 			defer func(cr *compressReader) {
 				err := cr.Close()
 				if err != nil {
-
+					w.WriteHeader(http.StatusInternalServerError)
+					return
 				}
 			}(cr)
 		}
