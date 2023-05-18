@@ -13,8 +13,8 @@ func GetRouter(cfg *config.AppConfig) http.Handler {
 	newApp := app.NewApp(cfg)
 	router := chi.NewRouter()
 
-	router.Use(middleware.LoggerMiddleware)
-	router.Use(middleware.GzipMiddleware)
+	router.Use(middleware.Logger)
+	router.Use(middleware.Gzip)
 
 	router.Get("/{id}", newApp.GetOriginalURL)
 	router.Post("/", newApp.GetShortURL)
