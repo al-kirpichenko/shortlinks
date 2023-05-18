@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func Test_ApiGetShortURL(t *testing.T) {
+func Test_APIGetShortURL(t *testing.T) {
 
 	//очищаем флаги командной строки
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
@@ -32,7 +32,7 @@ func Test_ApiGetShortURL(t *testing.T) {
 	test := testInf{
 		method: http.MethodPost,
 		want: want{
-			code:        200,
+			code:        201,
 			contentType: "application/json",
 		},
 	}
@@ -44,7 +44,7 @@ func Test_ApiGetShortURL(t *testing.T) {
 
 	w := httptest.NewRecorder()
 
-	app.ApiGetShortURL(w, r)
+	app.APIGetShortURL(w, r)
 
 	assert.Equal(t, test.want.code, w.Code, "Код ответа не совпадает с ожидаемым")
 	assert.Equal(t, test.want.contentType, w.Header().Get("Content-Type"), "Тип контента не совпадает с ожидаемым")

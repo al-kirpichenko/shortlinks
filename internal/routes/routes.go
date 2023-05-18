@@ -14,7 +14,7 @@ func Route(cfg *config.AppConfig) http.Handler {
 	router := chi.NewRouter()
 	router.Get("/{id}", log.WithLogging(newApp.GetOriginalURL))
 	router.Post("/", log.WithLogging(newApp.GetShortURL))
-	router.Post("/api/shorten", log.WithLogging(newApp.ApiGetShortURL))
+	router.Post("/api/shorten", log.WithLogging(newApp.APIGetShortURL))
 
 	return router
 

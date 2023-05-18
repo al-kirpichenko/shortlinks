@@ -8,14 +8,14 @@ import (
 )
 
 type Request struct {
-	Url string `json:"url"`
+	URL string `json:"url"`
 }
 
 type Response struct {
 	Result string `json:"result"`
 }
 
-func (a *App) ApiGetShortURL(w http.ResponseWriter, r *http.Request) {
+func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	var req Request
 	var buf bytes.Buffer
@@ -33,16 +33,19 @@ func (a *App) ApiGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := shortlinkgen.GenerateID()
 
-	a.storage.SetURL(id, req.Url)
+	a.storage.SetURL(id, req.URL)
 
 	result := Response{
 		Result: a.cfg.ResultURL + "/" + id,
 	}
 
 	response, err := json.Marshal(result)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 
 	_, err = w.Write(response)
 	if err != nil {
