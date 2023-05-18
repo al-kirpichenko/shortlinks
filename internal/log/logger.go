@@ -37,6 +37,7 @@ func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 // и возвращает новый http.Handler.
 
 func WithLogging(h http.HandlerFunc) http.HandlerFunc {
+
 	logFn := func(w http.ResponseWriter, r *http.Request) {
 
 		logger, err := zap.NewDevelopment()
@@ -75,4 +76,5 @@ func WithLogging(h http.HandlerFunc) http.HandlerFunc {
 		)
 	}
 	return logFn
+
 }
