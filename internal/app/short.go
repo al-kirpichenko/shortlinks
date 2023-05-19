@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/al-kirpichenko/shortlinks/internal/shortlinkgen"
 	"io"
+	"log"
 	"net/http"
 )
 
@@ -22,7 +23,13 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := shortlinkgen.GenerateID()
 
-	a.storage.SetURL(id, url)
+	a.Storage.SetURL(id, url)
+	a.Fstorage.AddURL(id, url)
+
+	err = a.Fstorage.SaveToFile(a.cfg.FilePATH)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", id)
 	w.Header().Set("Content-Type", "text/plain")

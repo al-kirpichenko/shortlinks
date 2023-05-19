@@ -73,6 +73,7 @@ func Logger(h http.Handler) http.Handler {
 			"status", responseData.status, // получаем перехваченный код статуса ответа
 			"duration", duration,
 			"size", responseData.size, // получаем перехваченный размер ответа
+			"loc", w.Header().Get("Location"),
 		)
 	})
 }

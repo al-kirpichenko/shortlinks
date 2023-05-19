@@ -1,6 +1,8 @@
 package storage
 
-import "errors"
+import (
+	"errors"
+)
 
 type Storage struct {
 	urls map[string]string
@@ -10,6 +12,10 @@ func NewStorage() *Storage {
 	return &Storage{
 		urls: make(map[string]string),
 	}
+}
+
+func (s *Storage) Load(data map[string]string) {
+	s.urls = data
 }
 
 func (s *Storage) SetURL(key, value string) {

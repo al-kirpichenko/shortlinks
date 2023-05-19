@@ -33,7 +33,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := shortlinkgen.GenerateID()
 
-	a.storage.SetURL(id, req.URL)
+	a.Storage.SetURL(id, req.URL)
 
 	result := Response{
 		Result: a.cfg.ResultURL + "/" + id,

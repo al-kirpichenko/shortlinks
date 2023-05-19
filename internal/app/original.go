@@ -9,7 +9,7 @@ func (a *App) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 
 	id := chi.URLParam(r, "id")
 
-	url, err := a.storage.GetURL(id)
+	url, err := a.Storage.GetURL(id)
 
 	if err != nil {
 		http.Error(w, "Invalid URL", http.StatusBadRequest)
