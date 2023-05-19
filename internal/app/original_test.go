@@ -44,7 +44,7 @@ func Test_GetOriginalURL(t *testing.T) {
 		},
 	}
 
-	app.storage.SetURL(test.testID, resultURL)
+	app.Storage.SetURL(test.testID, resultURL)
 
 	r := httptest.NewRequest(test.method, test.url, nil)
 
