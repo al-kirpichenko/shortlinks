@@ -12,6 +12,8 @@ import (
 
 func main() {
 
+	flag.Parse()
+
 	conf := config.NewCfg()
 
 	newApp := app.NewApp(conf)
@@ -22,7 +24,6 @@ func main() {
 
 	router := routes.Router(newApp)
 
-	flag.Parse()
 	log.Fatal(http.ListenAndServe(conf.Host, router))
 
 }
