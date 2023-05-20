@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/al-kirpichenko/shortlinks/internal/fs"
 	"github.com/al-kirpichenko/shortlinks/internal/routes"

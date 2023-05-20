@@ -2,7 +2,7 @@ package app
 
 import (
 	"flag"
-	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"

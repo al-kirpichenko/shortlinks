@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 	"flag"
-	"github.com/al-kirpichenko/shortlinks/config"
+	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"net/http"
