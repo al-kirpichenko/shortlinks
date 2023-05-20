@@ -18,7 +18,8 @@ func NewCfg() *AppConfig {
 
 	flag.StringVar(&a.Host, "a", "localhost:8080", "It's a Host")
 	flag.StringVar(&a.ResultURL, "b", "http://localhost:8080", "It's a Result URL")
-	flag.StringVar(&a.FilePATH, "f", "/tmp/short-url-db.json", "It's a FilePATH")
+	//flag.StringVar(&a.FilePATH, "f", "/tmp/short-url-db.json", "It's a FilePATH")
+	flag.StringVar(&a.FilePATH, "f", "E://GoProjects/shortlinks/tmp/short-url-db.json", "It's a FilePATH")
 
 	if baseURL := os.Getenv("BASE_URL"); baseURL != "" {
 		a.ResultURL = strings.TrimSpace(baseURL)

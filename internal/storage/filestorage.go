@@ -1,4 +1,4 @@
-package fs
+package storage
 
 import (
 	"bufio"
@@ -6,21 +6,21 @@ import (
 	"os"
 )
 
-type Fstorage struct {
+type FileStorage struct {
 	Short    string `json:"short_url"`
 	Original string `json:"original_url"`
 }
 
-func NewFstorage() *Fstorage {
-	return &Fstorage{}
+func NewFstorage() *FileStorage {
+	return &FileStorage{}
 }
 
-func (fs *Fstorage) AddURL(short string, original string) {
+func (fs *FileStorage) AddURL(short string, original string) {
 	fs.Short = short
 	fs.Original = original
 }
 
-func (fs Fstorage) SaveToFile(fileName string) error {
+func (fs FileStorage) SaveToFile(fileName string) error {
 
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -47,7 +47,7 @@ func LoadInFile(fileName string) map[string]string {
 	data := make(map[string]string)
 
 	for scanner.Scan() {
-		var d Fstorage
+		var d FileStorage
 		// Декодируем строку из формата json
 		err = json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
