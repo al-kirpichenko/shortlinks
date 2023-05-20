@@ -19,7 +19,7 @@ func main() {
 
 	newApp.Storage.Load(data)
 
-	router := routes.GetRouter(newApp)
+	router := routes.Router(newApp)
 	flag.Parse()
 	log.Fatal(http.ListenAndServe(conf.Host, router))
 

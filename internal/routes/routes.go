@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func GetRouter(app *app.App) http.Handler {
+func Router(app *app.App) http.Handler {
 
 	router := chi.NewRouter()
 
