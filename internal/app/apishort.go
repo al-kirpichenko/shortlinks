@@ -1,7 +1,6 @@
 package app
 
 import (
-	"bytes"
 	"encoding/json"
 	"github.com/al-kirpichenko/shortlinks/internal/shortlinkgen"
 	"log"
@@ -19,15 +18,9 @@ type Response struct {
 func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	var req Request
-	var buf bytes.Buffer
 
-	_, err := buf.ReadFrom(r.Body)
+	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	// десериализуем JSON
-	if err = json.Unmarshal(buf.Bytes(), &req); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
