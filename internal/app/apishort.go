@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"github.com/al-kirpichenko/shortlinks/internal/shortlinkgen"
+	"log"
 	"net/http"
 )
 
@@ -34,6 +35,13 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	id := shortlinkgen.GenerateID()
 
 	a.Storage.SetURL(id, req.URL)
+
+	a.Fstorage.AddURL(id, req.URL)
+
+	err = a.Fstorage.SaveToFile(a.cfg.FilePATH)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	result := Response{
 		Result: a.cfg.ResultURL + "/" + id,
