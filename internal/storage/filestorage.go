@@ -35,7 +35,7 @@ func (fs *FileStorage) SaveToFile(fileName string) error {
 	return err
 }
 
-func LoadInFile(fileName string) map[string]string {
+func LoadFromFile(fileName string) map[string]string {
 	file, err := os.OpenFile(fileName, os.O_RDONLY, 0666)
 	if err != nil {
 		return make(map[string]string)

@@ -4,25 +4,25 @@ import (
 	"errors"
 )
 
-type Storage struct {
+type InMemoryStorage struct {
 	urls map[string]string
 }
 
-func NewStorage() *Storage {
-	return &Storage{
+func NewInMemoryStorage() *InMemoryStorage {
+	return &InMemoryStorage{
 		urls: make(map[string]string),
 	}
 }
 
-func (s *Storage) Load(data map[string]string) {
+func (s *InMemoryStorage) Load(data map[string]string) {
 	s.urls = data
 }
 
-func (s *Storage) SetURL(key, value string) {
+func (s *InMemoryStorage) SetURL(key, value string) {
 	s.urls[key] = value
 }
 
-func (s *Storage) GetURL(key string) (string, error) {
+func (s *InMemoryStorage) GetURL(key string) (string, error) {
 
 	url, ok := s.urls[key]
 	if ok {

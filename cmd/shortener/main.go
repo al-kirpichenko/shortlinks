@@ -16,7 +16,7 @@ func main() {
 
 	newApp := app.NewApp(conf)
 
-	data := storage.LoadInFile(conf.FilePATH)
+	data := storage.LoadFromFile(conf.FilePATH)
 
 	newApp.Storage.Load(data)
 

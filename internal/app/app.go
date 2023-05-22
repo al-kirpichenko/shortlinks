@@ -7,7 +7,7 @@ import (
 
 type App struct {
 	cfg      *config.AppConfig
-	Storage  *storage.Storage
+	Storage  *storage.InMemoryStorage
 	Fstorage *storage.FileStorage
 }
 
@@ -15,7 +15,7 @@ func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{
 		cfg:      cfg,
-		Storage:  storage.NewStorage(),
+		Storage:  storage.NewInMemoryStorage(),
 		Fstorage: storage.NewFileStorage(),
 	}
 }
