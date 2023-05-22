@@ -52,7 +52,7 @@ func Logger(h http.Handler) http.Handler {
 		}()
 
 		// делаем регистратор SugaredLogger
-		sugar := *logger.Sugar()
+		//sugar := *logger.Sugar()
 
 		start := time.Now()
 
@@ -64,7 +64,7 @@ func Logger(h http.Handler) http.Handler {
 		}
 		h.ServeHTTP(&lw, r) // внедряем реализацию http.ResponseWriter
 
-		sugar.Infoln(
+		logger.Sugar().Infoln(
 			"uri", r.RequestURI,
 			"method", r.Method,
 			"status", responseData.status, // получаем перехваченный код статуса ответа
