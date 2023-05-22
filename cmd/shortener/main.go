@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	conf := config.NewCfg()
+	conf := config.NewAppConfig()
 
 	newApp := app.NewApp(conf)
 

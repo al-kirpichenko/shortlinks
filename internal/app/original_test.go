@@ -17,7 +17,7 @@ func Test_GetOriginalURL(t *testing.T) {
 	//очищаем флаги командной строки
 	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 
-	conf := config.NewCfg()
+	conf := config.NewAppConfig()
 	app := NewApp(conf)
 
 	resultURL := "https://yandex.ru"

@@ -12,7 +12,7 @@ type AppConfig struct {
 	FilePATH  string
 }
 
-func NewCfg() *AppConfig {
+func NewAppConfig() *AppConfig {
 
 	a := &AppConfig{}
 
