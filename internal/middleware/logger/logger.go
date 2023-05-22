@@ -1,8 +1,7 @@
-package middleware
+package logger
 
 import (
 	"go.uber.org/zap"
-	"log"
 	"net/http"
 	"time"
 )
@@ -34,22 +33,15 @@ func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 	r.responseData.status = statusCode // захватываем код статуса
 }
 
-// Logger добавляет дополнительный код для регистрации сведений о запросе
-// и возвращает новый http.Handler.
+var logger *zap.Logger
+
+func InitLogger() {
+	logger, _ = zap.NewDevelopment()
+}
 
 func Logger(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-		logger, err := zap.NewDevelopment()
-		if err != nil {
-			// вызываем панику, если ошибка
-			log.Fatal(err)
-		}
-
-		defer func() {
-			err = logger.Sync()
-		}()
 
 		// делаем регистратор SugaredLogger
 		//sugar := *logger.Sugar()
