@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
@@ -25,7 +24,6 @@ func main() {
 
 	router := routes.Router(newApp)
 
-	flag.Parse()
 	log.Fatal(http.ListenAndServe(conf.Host, router))
 
 }

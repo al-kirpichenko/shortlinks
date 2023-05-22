@@ -21,6 +21,8 @@ func NewAppConfig() *AppConfig {
 	flag.StringVar(&a.FilePATH, "f", "/tmp/short-url-db.json", "It's a FilePATH")
 	//flag.StringVar(&a.FilePATH, "f", "E:/GoProjects/shortlinks/tmp/short-url-db.json", "It's a FilePATH")
 
+	flag.Parse()
+
 	if baseURL := os.Getenv("BASE_URL"); baseURL != "" {
 		a.ResultURL = strings.TrimSpace(baseURL)
 	}
