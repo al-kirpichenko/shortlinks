@@ -3,6 +3,7 @@ package storage
 import (
 	"bufio"
 	"encoding/json"
+	"log"
 	"os"
 )
 
@@ -30,7 +31,7 @@ func (fs *FileStorage) SaveToFile(fileName string) error {
 	encoder := json.NewEncoder(file)
 	err = encoder.Encode(fs)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	return err
 }
@@ -51,7 +52,7 @@ func LoadFromFile(fileName string) map[string]string {
 		// Декодируем строку из формата json
 		err = json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
-			panic(err)
+			log.Fatal(err)
 		}
 
 		data[d.Short] = d.Original
