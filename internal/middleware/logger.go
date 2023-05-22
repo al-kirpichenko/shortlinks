@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"go.uber.org/zap"
+	"log"
 	"net/http"
 	"time"
 )
@@ -43,7 +44,7 @@ func Logger(h http.Handler) http.Handler {
 		logger, err := zap.NewDevelopment()
 		if err != nil {
 			// вызываем панику, если ошибка
-			panic(err)
+			log.Fatal(err)
 		}
 
 		defer func() {
@@ -65,13 +66,11 @@ func Logger(h http.Handler) http.Handler {
 		}
 		h.ServeHTTP(&lw, r) // внедряем реализацию http.ResponseWriter
 
-		duration := time.Since(start)
-
 		sugar.Infoln(
 			"uri", r.RequestURI,
 			"method", r.Method,
 			"status", responseData.status, // получаем перехваченный код статуса ответа
-			"duration", duration,
+			"duration", time.Since(start),
 			"size", responseData.size, // получаем перехваченный размер ответа
 			"loc", w.Header().Get("Location"),
 		)
