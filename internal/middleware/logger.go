@@ -56,10 +56,8 @@ func Logger(h http.Handler) http.Handler {
 
 		start := time.Now()
 
-		responseData := &responseData{
-			status: 0,
-			size:   0,
-		}
+		responseData := &responseData{}
+
 		lw := loggingResponseWriter{
 			ResponseWriter: w, // встраиваем оригинальный http.ResponseWriter
 			responseData:   responseData,
