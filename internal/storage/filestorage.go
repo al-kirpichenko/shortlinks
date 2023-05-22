@@ -16,11 +16,6 @@ func NewFileStorage() *FileStorage {
 	return &FileStorage{}
 }
 
-func (fs *FileStorage) AddURL(short string, original string) {
-	fs.Short = short
-	fs.Original = original
-}
-
 func (fs *FileStorage) SaveToFile(fileName string) error {
 
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)

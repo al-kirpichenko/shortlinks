@@ -29,7 +29,8 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	a.Storage.SetURL(id, req.URL)
 
-	a.Fstorage.AddURL(id, req.URL)
+	a.Fstorage.Short = id
+	a.Fstorage.Original = req.URL
 
 	err = a.Fstorage.SaveToFile(a.cfg.FilePATH)
 	if err != nil {

@@ -24,7 +24,8 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	id := shortlinkgen.GenerateID()
 
 	a.Storage.SetURL(id, url)
-	a.Fstorage.AddURL(id, url)
+	a.Fstorage.Short = id
+	a.Fstorage.Original = url
 
 	err = a.Fstorage.SaveToFile(a.cfg.FilePATH)
 	if err != nil {
