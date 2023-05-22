@@ -34,7 +34,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	err = a.Fstorage.SaveToFile(a.cfg.FilePATH)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	result := Response{
