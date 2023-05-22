@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"github.com/al-kirpichenko/shortlinks/internal/shortlinkgen"
+	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"log"
 	"net/http"
 )
@@ -29,10 +30,12 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	a.Storage.SetURL(id, req.URL)
 
-	a.Fstorage.Short = id
-	a.Fstorage.Original = req.URL
+	fileStorage := storage.NewFileStorage()
 
-	err = a.Fstorage.SaveToFile(a.cfg.FilePATH)
+	fileStorage.Short = id
+	fileStorage.Original = req.URL
+
+	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
 	if err != nil {
 		log.Println(err)
 	}

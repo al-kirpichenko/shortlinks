@@ -3,6 +3,7 @@ package app
 import (
 	"fmt"
 	"github.com/al-kirpichenko/shortlinks/internal/shortlinkgen"
+	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"io"
 	"log"
 	"net/http"
@@ -24,10 +25,14 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	id := shortlinkgen.GenerateID()
 
 	a.Storage.SetURL(id, url)
-	a.Fstorage.Short = id
-	a.Fstorage.Original = url
 
-	err = a.Fstorage.SaveToFile(a.cfg.FilePATH)
+	fileStorage := storage.NewFileStorage()
+
+	fileStorage.Short = id
+	fileStorage.Original = url
+
+	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
+
 	if err != nil {
 		log.Fatal(err)
 	}
