@@ -6,16 +6,14 @@ import (
 )
 
 type App struct {
-	cfg      *config.AppConfig
-	Storage  *storage.InMemoryStorage
-	Fstorage *storage.FileStorage
+	cfg     *config.AppConfig
+	Storage *storage.InMemoryStorage
 }
 
 func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{
-		cfg:      cfg,
-		Storage:  storage.NewInMemoryStorage(),
-		Fstorage: storage.NewFileStorage(),
+		cfg:     cfg,
+		Storage: storage.NewInMemoryStorage(),
 	}
 }
