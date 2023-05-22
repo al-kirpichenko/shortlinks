@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
@@ -21,6 +22,8 @@ func main() {
 	data := storage.LoadFromFile(conf.FilePATH)
 
 	newApp.Storage.Load(data)
+
+	flag.Parse()
 
 	router := routes.Router(newApp)
 

@@ -1,10 +1,12 @@
 package app
 
 import (
+	"flag"
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 )
@@ -12,7 +14,7 @@ import (
 func Test_APIGetShortURL(t *testing.T) {
 
 	//очищаем флаги командной строки
-	//flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 
 	type (
 		want struct {
