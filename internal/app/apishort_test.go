@@ -11,9 +11,6 @@ import (
 
 func Test_APIGetShortURL(t *testing.T) {
 
-	//очищаем флаги командной строки
-	//flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-
 	type (
 		want struct {
 			code        int

@@ -12,9 +12,6 @@ import (
 
 func Test_GetOriginalURL(t *testing.T) {
 
-	//очищаем флаги командной строки
-	//flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-
 	conf := &config.AppConfig{
 		Host:      "localhost:8080",
 		ResultURL: "http://localhost:8080",
