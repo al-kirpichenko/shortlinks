@@ -1,12 +1,22 @@
 package shortlinkgen
 
-import "math/rand"
+import (
+	"math/rand"
+	"strings"
+)
+
+const (
+	alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+)
 
 func GenerateID() string {
-	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	b := make([]rune, 8)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
+	number := rand.Uint64()
+	length := len(alphabet)
+	var encodedBuilder strings.Builder
+	encodedBuilder.Grow(10)
+	for ; number > 0; number = number / uint64(length) {
+		encodedBuilder.WriteByte(alphabet[(number % uint64(length))])
 	}
-	return string(b)
+
+	return encodedBuilder.String()
 }
