@@ -18,7 +18,11 @@ func main() {
 
 	newApp := app.NewApp(conf)
 
-	data := storage.LoadFromFile(conf.FilePATH)
+	data, err := storage.LoadFromFile(conf.FilePATH)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	newApp.Storage.Load(data)
 

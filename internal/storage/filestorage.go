@@ -28,11 +28,10 @@ func SaveToFile(fs *FileStorage, fileName string) error {
 	return err
 }
 
-func LoadFromFile(fileName string) map[string]string {
+func LoadFromFile(fileName string) (map[string]string, error) {
 	file, err := os.OpenFile(fileName, os.O_RDONLY, 0666)
 	if err != nil {
-		log.Println(err)
-		return make(map[string]string)
+		return nil, err
 	}
 	defer file.Close()
 
@@ -50,5 +49,5 @@ func LoadFromFile(fileName string) map[string]string {
 
 		data[d.Short] = d.Original
 	}
-	return data
+	return data, nil
 }
