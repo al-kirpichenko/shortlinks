@@ -2,20 +2,18 @@ package app
 
 import (
 	"context"
-	"flag"
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
 )
 
 func Test_GetOriginalURL(t *testing.T) {
 
 	//очищаем флаги командной строки
-	flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
+	//flag.CommandLine = flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 
 	conf := config.NewAppConfig()
 	app := NewApp(conf)

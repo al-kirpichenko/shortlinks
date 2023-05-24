@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
@@ -24,10 +23,6 @@ func main() {
 	newApp.Storage.Load(data)
 
 	router := routes.Router(newApp)
-
-	log.Println(conf.FilePATH)
-
-	flag.Parse()
 
 	log.Fatal(http.ListenAndServe(conf.Host, router))
 
