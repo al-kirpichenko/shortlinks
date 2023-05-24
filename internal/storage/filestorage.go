@@ -29,7 +29,8 @@ func SaveToFile(fs *FileStorage, fileName string) error {
 }
 
 func LoadFromFile(fileName string) (map[string]string, error) {
-	file, err := os.OpenFile(fileName, os.O_RDONLY, 0666)
+
+	file, err := os.OpenFile(fileName, os.O_RDONLY|os.O_CREATE, 0666)
 	if err != nil {
 		return nil, err
 	}
