@@ -23,42 +23,46 @@ func Test_GetOriginalURL(t *testing.T) {
 	resultURL := "https://yandex.ru"
 
 	type want struct {
-		code     int
-		location string
+		code        int
+		contentType string
+		location    string
 	}
-
-	type testInf struct {
+	tests := []struct {
+		name   string
 		method string
-		url    string
-		testID string
+		body   string
 		want   want
-	}
-
-	test := testInf{
-		method: http.MethodGet,
-		url:    "http://localhost:8080/vRFgdzs",
-		testID: "vRFgdzs",
-		want: want{
-			code:     307,
-			location: resultURL,
+	}{
+		{
+			name:   "test#1-ok",
+			method: http.MethodPost,
+			body:   "vRFgdzs",
+			want: want{
+				code:     307,
+				location: resultURL,
+			},
 		},
 	}
 
-	app.Storage.SetURL(test.testID, resultURL)
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
 
-	r := httptest.NewRequest(test.method, test.url, nil)
+			app.Storage.SetURL(test.body, resultURL)
 
-	w := httptest.NewRecorder()
+			r := httptest.NewRequest(test.method, "http://localhost:8080/"+test.body, nil)
 
-	router := chi.NewRouteContext()
+			w := httptest.NewRecorder()
 
-	router.URLParams.Add("id", test.testID)
+			router := chi.NewRouteContext()
 
-	r = r.WithContext(context.WithValue(r.Context(), chi.RouteCtxKey, router))
+			router.URLParams.Add("id", test.body)
 
-	app.GetOriginalURL(w, r)
+			r = r.WithContext(context.WithValue(r.Context(), chi.RouteCtxKey, router))
 
-	assert.Equal(t, test.want.code, w.Code, "Код ответа (307) не совпадает с ожидаемым")
-	assert.Equal(t, test.want.location, w.Header().Get("Location"), "Location не совпадает с ожидаемым")
+			app.GetOriginalURL(w, r)
 
+			assert.Equal(t, test.want.code, w.Code, "Код ответа (307) не совпадает с ожидаемым")
+			assert.Equal(t, test.want.location, w.Header().Get("Location"), "Location не совпадает с ожидаемым")
+		})
+	}
 }

@@ -16,20 +16,30 @@ func Test_GetShortURL(t *testing.T) {
 		contentType string
 		location    string
 	}
-	testURL := "https://yandex.ru"
 
-	type testInf struct {
+	tests := []struct {
+		name   string
 		method string
-		url    string
+		body   string
 		want   want
-	}
-
-	test := testInf{
-		method: http.MethodPost,
-		url:    testURL,
-		want: want{
-			code:        201,
-			contentType: "text/plain",
+	}{
+		{
+			name:   "test#1-ok",
+			method: http.MethodPost,
+			body:   "https://yandex.ru",
+			want: want{
+				code:        201,
+				contentType: "text/plain",
+			},
+		},
+		{
+			name:   "test#2-fail",
+			method: http.MethodPost,
+			body:   "",
+			want: want{
+				code:        400,
+				contentType: "text/plain; charset=utf-8",
+			},
 		},
 	}
 
@@ -38,15 +48,19 @@ func Test_GetShortURL(t *testing.T) {
 		ResultURL: "http://localhost:8080",
 		FilePATH:  "/tmp/short-url-db.json",
 	}
+
 	app := NewApp(conf)
 
-	r := httptest.NewRequest(test.method, "https://localhost:8080", strings.NewReader(test.url))
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			r := httptest.NewRequest(test.method, "https://localhost:8080", strings.NewReader(test.body))
 
-	w := httptest.NewRecorder()
+			w := httptest.NewRecorder()
 
-	app.GetShortURL(w, r)
+			app.GetShortURL(w, r)
 
-	assert.Equal(t, test.want.code, w.Code, "Код ответа не совпадает с ожидаемым")
-	assert.Equal(t, test.want.contentType, w.Header().Get("Content-Type"), "Тип контента не совпадает с ожидаемым")
-
+			assert.Equal(t, test.want.code, w.Code, "Код ответа не совпадает с ожидаемым")
+			assert.Equal(t, test.want.contentType, w.Header().Get("Content-Type"), "Тип контента не совпадает с ожидаемым")
+		})
+	}
 }
