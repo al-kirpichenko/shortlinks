@@ -11,6 +11,10 @@ import (
 	"net/http"
 )
 
+func init() {
+	flag.Parse()
+}
+
 func main() {
 
 	conf := config.NewAppConfig()
@@ -23,9 +27,9 @@ func main() {
 
 	newApp.Storage.Load(data)
 
-	flag.Parse()
-
 	router := routes.Router(newApp)
+
+	log.Println(conf.FilePATH)
 
 	log.Fatal(http.ListenAndServe(conf.Host, router))
 
