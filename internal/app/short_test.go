@@ -36,7 +36,11 @@ func Test_GetShortURL(t *testing.T) {
 		},
 	}
 
-	conf := config.NewAppConfig()
+	conf := &config.AppConfig{
+		Host:      "localhost:8080",
+		ResultURL: "http://localhost:8080",
+		FilePATH:  "/tmp/short-url-db.json",
+	}
 	app := NewApp(conf)
 
 	r := httptest.NewRequest(test.method, "https://localhost:8080", strings.NewReader(test.url))

@@ -35,7 +35,12 @@ func Test_APIGetShortURL(t *testing.T) {
 		},
 	}
 
-	conf := config.NewAppConfig()
+	conf := &config.AppConfig{
+		Host:      "localhost:8080",
+		ResultURL: "http://localhost:8080",
+		FilePATH:  "/tmp/short-url-db.json",
+	}
+
 	app := NewApp(conf)
 
 	r := httptest.NewRequest(test.method, "https://localhost:8080", strings.NewReader(`{"url": "https://yandex.ru"}`))
