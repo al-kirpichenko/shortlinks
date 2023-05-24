@@ -25,9 +25,6 @@ func SaveToFile(fs *FileStorage, fileName string) error {
 	defer file.Close()
 	encoder := json.NewEncoder(file)
 	err = encoder.Encode(fs)
-	if err != nil {
-		log.Println(err)
-	}
 	return err
 }
 
