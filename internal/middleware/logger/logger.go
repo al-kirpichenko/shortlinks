@@ -43,9 +43,6 @@ func Logger(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		// делаем регистратор SugaredLogger
-		//sugar := *logger.Sugar()
-
 		start := time.Now()
 
 		responseData := &responseData{}
