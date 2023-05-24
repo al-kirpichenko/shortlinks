@@ -38,6 +38,8 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
 	if err != nil {
 		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	result := Response{
@@ -47,6 +49,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	response, err := json.Marshal(result)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
