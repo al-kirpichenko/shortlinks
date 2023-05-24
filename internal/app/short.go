@@ -34,7 +34,9 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
 
 	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", id)
