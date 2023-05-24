@@ -31,6 +31,7 @@ func SaveToFile(fs *FileStorage, fileName string) error {
 func LoadFromFile(fileName string) map[string]string {
 	file, err := os.OpenFile(fileName, os.O_RDONLY, 0666)
 	if err != nil {
+		log.Println(err)
 		return make(map[string]string)
 	}
 	defer file.Close()
@@ -44,7 +45,7 @@ func LoadFromFile(fileName string) map[string]string {
 		// Декодируем строку из формата json
 		err = json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 
 		data[d.Short] = d.Original
