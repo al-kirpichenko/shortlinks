@@ -28,12 +28,6 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := shortlinkgen.GenerateID()
 
-	if id == "" {
-		log.Println("Не удалось сгенерировать уникальный ключ")
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	a.Storage.SetURL(id, req.URL)
 
 	fileStorage := storage.NewFileStorage()
