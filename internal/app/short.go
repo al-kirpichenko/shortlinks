@@ -12,6 +12,7 @@ import (
 func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	responseData, err := io.ReadAll(r.Body)
+
 	if err != nil {
 		http.Error(w, fmt.Sprintf("cannot read request body: %s", err), http.StatusBadRequest)
 		return

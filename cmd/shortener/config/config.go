@@ -2,8 +2,6 @@ package config
 
 import (
 	"flag"
-	//"os"
-	//"strings"
 	"github.com/caarlos0/env"
 )
 
@@ -26,15 +24,6 @@ func NewAppConfig() *AppConfig {
 	if err != nil {
 		panic(err)
 	}
-	//if baseURL := os.Getenv("BASE_URL"); baseURL != "" {
-	//	a.ResultURL = strings.TrimSpace(baseURL)
-	//}
-	//if host := os.Getenv("SERVER_ADDRESS"); host != "" {
-	//	a.Host = strings.TrimSpace(host)
-	//}
-	//if file := os.Getenv("FILE_STORAGE_PATH"); file != "" {
-	//	a.FilePATH = file
-	//}
 
 	return &a
 }
