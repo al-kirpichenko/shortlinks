@@ -14,7 +14,6 @@ func Test_GetShortURL(t *testing.T) {
 	type want struct {
 		code        int
 		contentType string
-		location    string
 	}
 
 	tests := []struct {

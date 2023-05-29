@@ -23,9 +23,8 @@ func Test_GetOriginalURL(t *testing.T) {
 	resultURL := "https://yandex.ru"
 
 	type want struct {
-		code        int
-		contentType string
-		location    string
+		code     int
+		location string
 	}
 	tests := []struct {
 		name   string

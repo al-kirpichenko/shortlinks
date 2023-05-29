@@ -14,7 +14,6 @@ func Test_APIGetShortURL(t *testing.T) {
 	type want struct {
 		code        int
 		contentType string
-		location    string
 	}
 
 	tests := []struct {
