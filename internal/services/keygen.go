@@ -1,4 +1,4 @@
-package shortlinkgen
+package services
 
 import (
 	"math/rand"
@@ -9,7 +9,7 @@ const (
 	alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
-func GenerateID() string {
+func Keygen() string {
 	number := rand.Uint64()
 	length := len(alphabet)
 	var encodedBuilder strings.Builder
