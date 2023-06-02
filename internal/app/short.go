@@ -2,7 +2,7 @@ package app
 
 import (
 	"fmt"
-	"github.com/al-kirpichenko/shortlinks/internal/services"
+	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"io"
 	"log"
@@ -23,7 +23,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 	url := string(responseData)
 
-	id := services.Keygen()
+	id := keygen.KeyGenerate()
 
 	a.Storage.SetURL(id, url)
 

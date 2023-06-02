@@ -2,7 +2,7 @@ package app
 
 import (
 	"encoding/json"
-	"github.com/al-kirpichenko/shortlinks/internal/services"
+	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"log"
 	"net/http"
@@ -26,7 +26,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := services.Keygen()
+	id := keygen.KeyGenerate()
 
 	a.Storage.SetURL(id, req.URL)
 

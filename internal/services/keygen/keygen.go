@@ -1,4 +1,4 @@
-package services
+package keygen
 
 import (
 	"math/rand"
@@ -9,7 +9,7 @@ const (
 	alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
-func Keygen() string {
+func KeyGenerate() string {
 	number := rand.Uint64()
 	length := len(alphabet)
 	var encodedBuilder strings.Builder
