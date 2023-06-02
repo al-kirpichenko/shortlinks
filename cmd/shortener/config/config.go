@@ -8,10 +8,10 @@ import (
 )
 
 const (
-	host     = "localhost"
-	user     = "postgres"
-	password = ""
-	dbname   = "short"
+	DBhost     = "localhost"
+	DBuser     = "postgres"
+	DBpassword = ""
+	DBdbname   = "short"
 )
 
 type AppConfig struct {
@@ -25,8 +25,8 @@ func NewAppConfig() *AppConfig {
 
 	a := AppConfig{}
 
-	ps := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-		host, user, password, dbname)
+	ps := fmt.Sprintf("DBhost=%s DBuser=%s DBpassword=%s DBdbname=%s sslmode=disable",
+		DBhost, DBuser, DBpassword, DBdbname)
 
 	flag.StringVar(&a.Host, "a", "localhost:8080", "It's a Host")
 	flag.StringVar(&a.ResultURL, "b", "http://localhost:8080", "It's a Result URL")
