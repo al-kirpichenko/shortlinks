@@ -25,7 +25,7 @@ func NewAppConfig() *AppConfig {
 
 	a := AppConfig{}
 
-	ps := fmt.Sprintf("DBhost=%s DBuser=%s DBpassword=%s DBdbname=%s sslmode=disable",
+	ps := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
 		DBhost, DBuser, DBpassword, DBdbname)
 
 	flag.StringVar(&a.Host, "a", "localhost:8080", "It's a Host")
