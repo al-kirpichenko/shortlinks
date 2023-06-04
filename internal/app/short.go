@@ -29,6 +29,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 		if err := a.DataBase.CreateTable(); err != nil {
 			log.Println("table is exist!")
+
 		}
 
 		if err := a.DataBase.Insert(id, url); err != nil {
@@ -38,22 +39,23 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-	} else {
-
-		fileStorage := storage.NewFileStorage()
-
-		fileStorage.Short = id
-		fileStorage.Original = url
-
-		err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
-
-		if err != nil {
-			log.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
 	}
+
+	a.Storage.SetURL(id, url)
+
+	fileStorage := storage.NewFileStorage()
+
+	fileStorage.Short = id
+	fileStorage.Original = url
+
+	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
+
+	if err != nil {
+		log.Println(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", id)
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusCreated)
