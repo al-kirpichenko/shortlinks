@@ -31,6 +31,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 			log.Println("table not found!")
 			if err := a.DataBase.CreateTable(); err != nil {
 				log.Println("table don't created!")
+				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 			log.Println("the table has been created!")
 		}
@@ -38,6 +39,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		if err := a.DataBase.Insert(id, url); err != nil {
 			log.Println("Don't insert url!")
 			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
 	}
