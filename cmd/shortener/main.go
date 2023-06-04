@@ -22,7 +22,7 @@ func main() {
 		log.Println("Don't configure Database!")
 	}
 
-	if newApp.DBReady == false {
+	if !newApp.DBReady {
 		data, err := storage.LoadFromFile(conf.FilePATH)
 
 		if err != nil {
