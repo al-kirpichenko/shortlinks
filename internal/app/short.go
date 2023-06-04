@@ -27,8 +27,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	if a.DBReady {
 
-		rows, err := a.DataBase.DB.Query("SELECT * FROM links")
-		if err != nil {
+		if _, err := a.DataBase.DB.Query("SELECT * FROM links"); err != nil {
 			log.Println("table not found!")
 			if err := a.DataBase.CreateTable(); err != nil {
 				log.Println("table don't created!")
@@ -37,7 +36,6 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 			}
 			log.Println("the table has been created!")
 		}
-		defer rows.Close()
 
 		if err := a.DataBase.Insert(id, url); err != nil {
 			log.Println("Don't insert url!")
