@@ -20,15 +20,15 @@ func main() {
 
 	if err := newApp.ConfigureDB(); err != nil {
 		log.Println("Don't configure Database!")
-		data, err := storage.LoadFromFile(conf.FilePATH)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		newApp.Storage.Load(data)
-		log.Println("data load from file")
 	}
+
+	data, err := storage.LoadFromFile(conf.FilePATH)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	newApp.Storage.Load(data)
 
 	router := routes.Router(newApp)
 
