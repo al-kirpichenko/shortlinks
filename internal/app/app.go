@@ -7,10 +7,10 @@ import (
 )
 
 type App struct {
-	cfg     *config.AppConfig
-	Storage *storage.InMemoryStorage
-	DB      *database.DBStore
-	DBReady bool
+	cfg      *config.AppConfig
+	Storage  *storage.InMemoryStorage
+	DataBase *database.DBStore
+	DBReady  bool
 }
 
 func NewApp(cfg *config.AppConfig) *App {
@@ -26,7 +26,7 @@ func (a *App) ConfigureDB() error {
 	if err := db.Open(); err != nil {
 		return err
 	}
-	a.DB = db
+	a.DataBase = db
 	a.DBReady = true
 	return nil
 }

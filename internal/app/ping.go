@@ -8,7 +8,7 @@ import (
 func (a *App) Ping(w http.ResponseWriter, _ *http.Request) {
 
 	if a.DBReady {
-		if err := a.DB.SqlDB.Ping(); err != nil {
+		if err := a.DataBase.Db.Ping(); err != nil {
 			log.Println("don't ping Database")
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

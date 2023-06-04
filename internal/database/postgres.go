@@ -7,7 +7,7 @@ import (
 
 type DBStore struct {
 	DatabaseConf string
-	SqlDB        *sql.DB
+	Db           *sql.DB
 }
 
 func NewDB(conf string) *DBStore {
@@ -27,10 +27,10 @@ func (store *DBStore) Open() error {
 		return err
 	}
 
-	store.SqlDB = db
+	store.Db = db
 	return nil
 }
 
 func (store *DBStore) Close() {
-	store.SqlDB.Close()
+	store.Db.Close()
 }
