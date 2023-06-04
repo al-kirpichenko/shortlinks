@@ -41,22 +41,22 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+	} else {
+
+		a.Storage.SetURL(id, req.URL)
+
+		fileStorage := storage.NewFileStorage()
+
+		fileStorage.Short = id
+		fileStorage.Original = req.URL
+
+		err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
+		if err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
-
-	a.Storage.SetURL(id, req.URL)
-
-	fileStorage := storage.NewFileStorage()
-
-	fileStorage.Short = id
-	fileStorage.Original = req.URL
-
-	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	result := Response{
 		Result: a.cfg.ResultURL + "/" + id,
 	}
