@@ -28,6 +28,23 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := keygen.KeyGenerate()
 
+	if a.DBReady {
+
+		if _, err := a.DataBase.DB.Query("SELECT * FROM links"); err != nil {
+			log.Println("table not found!")
+			if err := a.DataBase.CreateTable(); err != nil {
+				log.Println("table don't created!")
+			}
+			log.Println("the table has been created!")
+		}
+
+		if err := a.DataBase.Insert(id, req.URL); err != nil {
+			log.Println("Don't insert url!")
+			log.Println(err)
+		}
+
+	}
+
 	a.Storage.SetURL(id, req.URL)
 
 	fileStorage := storage.NewFileStorage()

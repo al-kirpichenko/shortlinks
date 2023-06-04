@@ -10,7 +10,7 @@ const (
 	DBhost     = "localhost"
 	DBuser     = "postgres"
 	DBpassword = ""
-	DBdbname   = "short"
+	DBdbname   = "shorten"
 )
 
 type AppConfig struct {

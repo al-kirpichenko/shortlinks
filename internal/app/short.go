@@ -37,6 +37,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 		if err := a.DataBase.Insert(id, url); err != nil {
 			log.Println("Don't insert url!")
+			log.Println(err)
 		}
 
 	}
