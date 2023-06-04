@@ -32,10 +32,8 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 		if _, err := a.DataBase.DB.Query("SELECT * FROM links"); err != nil {
 			log.Println("table not found!")
-			log.Println(err)
 			if err := a.DataBase.CreateTable(); err != nil {
 				log.Println("table don't created!")
-				log.Println(err)
 			}
 			log.Println("the table has been created!")
 		}
