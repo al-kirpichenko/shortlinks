@@ -5,11 +5,32 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
-func Connect(conn string) (*sql.DB, error) {
+type DBStore struct {
+	DatabaseConf string
+	SqlDB        *sql.DB
+}
 
-	db, err := sql.Open("pgx", conn)
-	if err != nil {
-		return nil, err
+func NewDB(conf string) *DBStore {
+	return &DBStore{
+		DatabaseConf: conf,
 	}
-	return db, nil
+}
+
+func (store *DBStore) Open() error {
+
+	db, err := sql.Open("pgx", store.DatabaseConf)
+	if err != nil {
+		return err
+	}
+
+	if err := db.Ping(); err != nil {
+		return err
+	}
+
+	store.SqlDB = db
+	return nil
+}
+
+func (store *DBStore) Close() {
+	store.SqlDB.Close()
 }

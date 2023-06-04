@@ -18,6 +18,10 @@ func main() {
 
 	newApp := app.NewApp(conf)
 
+	if err := newApp.ConfigureDB(); err != nil {
+		log.Println("Don't configure Database!")
+	}
+
 	data, err := storage.LoadFromFile(conf.FilePATH)
 
 	if err != nil {
