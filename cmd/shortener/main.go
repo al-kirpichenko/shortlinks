@@ -18,24 +18,29 @@ func main() {
 
 	newApp := app.NewApp(conf)
 
-	if err := newApp.ConfigureDB(); err != nil {
+	run(newApp)
+
+}
+
+func run(app *app.App) {
+
+	if err := app.ConfigureDB(); err != nil {
 		log.Println("Don't configure Database!")
 		log.Println(err)
 	}
 
-	if conf.FilePATH != "" {
+	if app.GetConfig().FilePATH != "" {
 
-		data, err := storage.LoadFromFile(conf.FilePATH)
+		data, err := storage.LoadFromFile(app.GetConfig().FilePATH)
 
 		if err != nil {
 			log.Println("Don't load from file!")
 			log.Println(err)
 		}
 
-		newApp.Storage.Load(data)
+		app.Storage.Load(data)
 	}
-	router := routes.Router(newApp)
+	router := routes.Router(app)
 
-	log.Fatal(http.ListenAndServe(conf.Host, router))
-
+	log.Fatal(http.ListenAndServe(app.GetConfig().Host, router))
 }

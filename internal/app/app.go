@@ -23,6 +23,10 @@ func NewApp(cfg *config.AppConfig) *App {
 	}
 }
 
+func (a *App) GetConfig() *config.AppConfig {
+	return a.cfg
+}
+
 func (a *App) ConfigureDB() error {
 
 	if a.cfg.DataBaseString != "" {
