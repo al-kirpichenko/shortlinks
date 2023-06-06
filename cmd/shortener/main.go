@@ -26,7 +26,8 @@ func main() {
 	data, err := storage.LoadFromFile(conf.FilePATH)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println("filePath is empty!")
+		log.Println(err)
 	}
 
 	newApp.Storage.Load(data)

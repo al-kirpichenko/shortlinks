@@ -8,7 +8,7 @@ import (
 
 type PG struct {
 	databaseConf string
-	Db           *sql.DB
+	DB           *sql.DB
 }
 
 func NewDB(conf string) *PG {
@@ -28,16 +28,16 @@ func (pg *PG) Open() error {
 		return err
 	}
 
-	pg.Db = db
+	pg.DB = db
 	return nil
 }
 
 func (pg *PG) Close() {
-	pg.Db.Close()
+	pg.DB.Close()
 }
 
 func (pg *PG) PingDB() error {
-	if err := pg.Db.Ping(); err != nil {
+	if err := pg.DB.Ping(); err != nil {
 		log.Println("don't ping Database")
 		return err
 	}
