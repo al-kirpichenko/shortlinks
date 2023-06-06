@@ -20,6 +20,7 @@ func NewDB(conf string) *PG {
 func (pg *PG) Open() error {
 
 	db, err := sql.Open("pgx", pg.databaseConf)
+
 	if err != nil {
 		return err
 	}
@@ -29,6 +30,7 @@ func (pg *PG) Open() error {
 	}
 
 	pg.DB = db
+
 	return nil
 }
 
