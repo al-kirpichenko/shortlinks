@@ -23,15 +23,17 @@ func main() {
 		log.Println(err)
 	}
 
-	data, err := storage.LoadFromFile(conf.FilePATH)
+	if conf.FilePATH != "" {
 
-	if err != nil {
-		log.Println("filePath is empty!")
-		log.Println(err)
+		data, err := storage.LoadFromFile(conf.FilePATH)
+
+		if err != nil {
+			log.Println("Don't load from file!")
+			log.Println(err)
+		}
+
+		newApp.Storage.Load(data)
 	}
-
-	newApp.Storage.Load(data)
-
 	router := routes.Router(newApp)
 
 	log.Fatal(http.ListenAndServe(conf.Host, router))
