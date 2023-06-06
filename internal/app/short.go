@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 	"io"
@@ -25,36 +26,36 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := keygen.KeyGenerate()
 
+	linkModel := models.Link{
+		Short:    id,
+		Original: url,
+		Store:    a.DataBase,
+	}
+
 	if a.DBReady {
-
-		if err := a.DataBase.CreateTable(); err != nil {
-			log.Println("table is exist!")
-
-		}
-
-		if err := a.DataBase.Insert(id, url); err != nil {
+		_, err = linkModel.Insert(&linkModel)
+		if err != nil {
 			log.Println("Don't insert url!")
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+	} else if a.cfg.FilePATH != "" {
+		fileStorage := storage.NewFileStorage()
 
+		fileStorage.Short = id
+		fileStorage.Original = url
+
+		err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
+
+		if err != nil {
+			log.Println(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 
 	a.Storage.SetURL(id, url)
-
-	fileStorage := storage.NewFileStorage()
-
-	fileStorage.Short = id
-	fileStorage.Original = url
-
-	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
-
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 
 	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", id)
 	w.Header().Set("Content-Type", "text/plain")

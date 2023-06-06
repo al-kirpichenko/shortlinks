@@ -3,22 +3,23 @@ package pg
 import (
 	"database/sql"
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"log"
 )
 
-type DBStore struct {
-	DatabaseConf string
-	DB           *sql.DB
+type PG struct {
+	databaseConf string
+	Db           *sql.DB
 }
 
-func NewDB(conf string) *DBStore {
-	return &DBStore{
-		DatabaseConf: conf,
+func NewDB(conf string) *PG {
+	return &PG{
+		databaseConf: conf,
 	}
 }
 
-func (store *DBStore) Open() error {
+func (pg *PG) Open() error {
 
-	db, err := sql.Open("pgx", store.DatabaseConf)
+	db, err := sql.Open("pgx", pg.databaseConf)
 	if err != nil {
 		return err
 	}
@@ -27,10 +28,18 @@ func (store *DBStore) Open() error {
 		return err
 	}
 
-	store.DB = db
+	pg.Db = db
 	return nil
 }
 
-func (store *DBStore) Close() {
-	store.DB.Close()
+func (pg *PG) Close() {
+	pg.Db.Close()
+}
+
+func (pg *PG) PingDB() error {
+	if err := pg.Db.Ping(); err != nil {
+		log.Println("don't ping Database")
+		return err
+	}
+	return nil
 }

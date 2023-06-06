@@ -1,15 +1,17 @@
 package app
 
 import (
+	"errors"
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/database/pg"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
+	"log"
 )
 
 type App struct {
 	cfg      *config.AppConfig
 	Storage  *storage.InMemoryStorage
-	DataBase *pg.DBStore
+	DataBase *pg.PG
 	DBReady  bool
 }
 
@@ -22,11 +24,16 @@ func NewApp(cfg *config.AppConfig) *App {
 }
 
 func (a *App) ConfigureDB() error {
-	db := pg.NewDB(a.cfg.DataBaseString)
-	if err := db.Open(); err != nil {
-		return err
+
+	if a.cfg.DataBaseString != "" {
+		db := pg.NewDB(a.cfg.DataBaseString)
+		if err := db.Open(); err != nil {
+			log.Println(err)
+			return err
+		}
+		a.DataBase = db
+		a.DBReady = true
+		return nil
 	}
-	a.DataBase = db
-	a.DBReady = true
-	return nil
+	return errors.New("DataBaseString is empty!")
 }
