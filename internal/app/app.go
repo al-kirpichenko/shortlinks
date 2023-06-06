@@ -35,5 +35,5 @@ func (a *App) ConfigureDB() error {
 		a.DBReady = true
 		return nil
 	}
-	return errors.New("DataBaseString is empty!")
+	return errors.New("dataBaseString is empty")
 }
