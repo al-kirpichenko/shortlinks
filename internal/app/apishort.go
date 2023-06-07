@@ -47,12 +47,13 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if a.cfg.FilePATH != "" {
 
-		fileStorage := storage.NewFileStorage()
+		//fileStorage := storage.NewFileStorage()
+		//
+		//fileStorage.Short = link.Short
+		//fileStorage.Original = link.Original
 
-		fileStorage.Short = link.Short
-		fileStorage.Original = link.Original
-
-		err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
+		//err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
+		err = storage.SaveToFile(&link, a.cfg.FilePATH)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
