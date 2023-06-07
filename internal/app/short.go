@@ -42,18 +42,20 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-	} else if a.cfg.FilePATH != "" {
+	} else {
+		if a.cfg.FilePATH != "" {
 
-		err = storage.SaveToFile(&link, a.cfg.FilePATH)
+			err = storage.SaveToFile(&link, a.cfg.FilePATH)
 
-		if err != nil {
-			log.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+			if err != nil {
+				log.Println(err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			a.Storage.SetURL(link.Short, link.Original)
 		}
+		a.Storage.SetURL(link.Short, link.Original)
 	}
-
-	a.Storage.SetURL(link.Short, link.Original)
 
 	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", link.Short)
 	w.Header().Set("Content-Type", "text/plain")

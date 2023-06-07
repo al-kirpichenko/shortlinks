@@ -25,15 +25,16 @@ func (a *App) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 			log.Println("Don't read data from table")
 			log.Println(err)
 			http.Error(w, "Invalid URL", http.StatusBadRequest)
+			return
 		}
 	}
 	if link.Original == "" {
 		link.Original, err = a.Storage.GetURL(id)
 		if err != nil {
 			http.Error(w, "Invalid URL", http.StatusBadRequest)
+			return
 		}
 	}
-
 	w.Header().Set("Location", link.Original)
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }

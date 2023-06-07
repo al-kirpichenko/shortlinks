@@ -31,6 +31,7 @@ func NewAppConfig() *AppConfig {
 	//flag.StringVar(&a.FilePATH, "f", "/tmp/short-url-db.json", "It's a FilePATH")
 	flag.StringVar(&a.FilePATH, "f", "", "It's a FilePATH")
 	flag.StringVar(&a.DataBaseString, "d", "", "it's conn string")
+	//flag.StringVar(&a.DataBaseString, "d", "ps", "it's conn string")
 
 	flag.Parse()
 
