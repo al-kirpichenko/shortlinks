@@ -23,13 +23,10 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Empty POST request body!", http.StatusBadRequest)
 		return
 	}
-	url := string(responseData)
-
-	id := keygen.KeyGenerate()
 
 	link := entities.Link{
-		Short:    id,
-		Original: url,
+		Short:    keygen.KeyGenerate(),
+		Original: string(responseData),
 	}
 
 	linkModel := models.Link{

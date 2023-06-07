@@ -28,10 +28,8 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id := keygen.KeyGenerate()
-
 	link := entities.Link{
-		Short:    id,
+		Short:    keygen.KeyGenerate(),
 		Original: req.URL,
 	}
 
