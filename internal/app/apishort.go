@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"github.com/al-kirpichenko/shortlinks/internal/entities"
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
@@ -29,14 +30,17 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	id := keygen.KeyGenerate()
 
-	linkModel := models.Link{
+	link := entities.Link{
 		Short:    id,
 		Original: req.URL,
-		Store:    a.DataBase,
+	}
+
+	linkModel := models.Link{
+		Store: a.DataBase,
 	}
 
 	if a.DBReady {
-		_, err = linkModel.Insert(&linkModel)
+		_, err = linkModel.Insert(&link)
 		if err != nil {
 			log.Println("Don't insert url!")
 			log.Println(err)
@@ -47,8 +51,8 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 		fileStorage := storage.NewFileStorage()
 
-		fileStorage.Short = id
-		fileStorage.Original = req.URL
+		fileStorage.Short = link.Short
+		fileStorage.Original = link.Original
 
 		err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
 		if err != nil {
@@ -58,10 +62,10 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	a.Storage.SetURL(id, req.URL)
+	a.Storage.SetURL(link.Short, link.Original)
 
 	result := Response{
-		Result: a.cfg.ResultURL + "/" + id,
+		Result: a.cfg.ResultURL + "/" + link.Short,
 	}
 
 	response, err := json.Marshal(result)

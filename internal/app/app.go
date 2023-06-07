@@ -20,6 +20,7 @@ func NewApp(cfg *config.AppConfig) *App {
 	return &App{
 		cfg:     cfg,
 		Storage: storage.NewInMemoryStorage(),
+		DBReady: false,
 	}
 }
 

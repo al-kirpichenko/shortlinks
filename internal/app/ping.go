@@ -16,5 +16,6 @@ func (a *App) Ping(w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		return
 	}
-
+	log.Println("don't ping Database")
+	w.WriteHeader(http.StatusInternalServerError)
 }

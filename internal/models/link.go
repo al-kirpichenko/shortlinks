@@ -2,14 +2,12 @@ package models
 
 import (
 	"github.com/al-kirpichenko/shortlinks/internal/database/pg"
+	"github.com/al-kirpichenko/shortlinks/internal/entities"
 	"log"
 )
 
 type Link struct {
-	ID       int
-	Short    string
-	Original string
-	Store    *pg.PG
+	Store *pg.PG
 }
 
 func (l *Link) CreateTable() error {
@@ -19,7 +17,7 @@ func (l *Link) CreateTable() error {
 	return nil
 }
 
-func (l *Link) Insert(link *Link) (*Link, error) {
+func (l *Link) Insert(link *entities.Link) (*entities.Link, error) {
 	if err := l.CreateTable(); err != nil {
 		return nil, err
 	}
@@ -32,11 +30,11 @@ func (l *Link) Insert(link *Link) (*Link, error) {
 	return link, nil
 }
 
-func (l *Link) GetOriginal(short string) (*Link, error) {
+func (l *Link) GetOriginal(link *entities.Link) (*entities.Link, error) {
 
-	if err := l.Store.DB.QueryRow("SELECT original FROM links WHERE short = $1", short).Scan(&l.Original); err != nil {
+	if err := l.Store.DB.QueryRow("SELECT original FROM links WHERE short = $1", link.Short).Scan(&link.Original); err != nil {
 		log.Println(err)
 		return nil, err
 	}
-	return l, nil
+	return link, nil
 }
