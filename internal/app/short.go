@@ -29,11 +29,12 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		Original: string(responseData),
 	}
 
-	linkModel := models.Link{
-		Store: a.DataBase,
-	}
-
 	if a.DBReady {
+
+		linkModel := models.Link{
+			Store: a.DataBase,
+		}
+
 		_, err = linkModel.Insert(&link)
 		if err != nil {
 			log.Println("Don't insert url!")
