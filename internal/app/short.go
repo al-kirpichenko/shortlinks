@@ -44,13 +44,6 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		}
 	} else if a.cfg.FilePATH != "" {
 
-		//TODO заменить  на *entities.Link, избавиться от структуры fileStorage вообще
-
-		//fileStorage := storage.NewFileStorage()
-		//
-		//fileStorage.Short = link.Short
-		//fileStorage.Original = link.Original
-
 		err = storage.SaveToFile(&link, a.cfg.FilePATH)
 
 		if err != nil {
