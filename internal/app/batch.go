@@ -38,14 +38,14 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 	for _, val := range originals {
 
 		log.Println("получен url " + val.URL)
-		short := keygen.KeyGenerate()
-		log.Println("сгенерирована короткая ссылка " + short)
+		key := keygen.KeyGenerate()
+		log.Println("сгенерирована короткая ссылка " + key)
 		resp := Resp{
 			ID:    val.ID,
-			Short: fmt.Sprintf(a.cfg.ResultURL+"/%s", short),
+			Short: fmt.Sprintf(a.cfg.ResultURL+"/%s", key),
 		}
 		link := entities.Link{
-			Short:    short,
+			Short:    key,
 			Original: val.URL,
 		}
 
