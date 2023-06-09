@@ -49,13 +49,13 @@ func (fs *FileStorage) InsertLinks(links []entities.Link) error {
 	return err
 }
 
-func (fs *FileStorage) GetOriginal(short string) (*entities.Link, error) {
+func (fs *FileStorage) GetOriginal(short string) (entities.Link, error) {
 
 	link, err := fs.memStorage.GetOriginal(short)
 
 	if err != nil {
 		log.Println("")
-		return nil, err
+		return link, err
 	}
 	return link, nil
 }

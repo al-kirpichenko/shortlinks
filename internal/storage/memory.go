@@ -33,7 +33,7 @@ func (s *InMemoryStorage) InsertLinks(links []entities.Link) error {
 	return nil
 }
 
-func (s *InMemoryStorage) GetOriginal(short string) (*entities.Link, error) {
+func (s *InMemoryStorage) GetOriginal(short string) (entities.Link, error) {
 
 	var ok bool
 	link := entities.Link{
@@ -41,7 +41,7 @@ func (s *InMemoryStorage) GetOriginal(short string) (*entities.Link, error) {
 	}
 	link.Original, ok = s.urls[link.Short]
 	if ok {
-		return &link, nil
+		return link, nil
 	}
-	return nil, errors.New("id not found")
+	return link, errors.New("id not found")
 }

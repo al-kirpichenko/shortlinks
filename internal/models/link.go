@@ -54,14 +54,14 @@ func (l *Link) InsertLinks(links []entities.Link) error {
 	return tx.Commit()
 }
 
-func (l *Link) GetOriginal(short string) (*entities.Link, error) {
+func (l *Link) GetOriginal(short string) (entities.Link, error) {
 
 	link := entities.Link{
 		Short: short,
 	}
 	if err := l.Store.DB.QueryRow("SELECT original FROM links WHERE short = $1", link.Short).Scan(&link.Original); err != nil {
 		log.Println(err)
-		return nil, err
+		return link, err
 	}
-	return &link, nil
+	return link, nil
 }
