@@ -2,11 +2,11 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/al-kirpichenko/shortlinks/internal/entities"
-	_ "github.com/al-kirpichenko/shortlinks/internal/entities"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 )
 
@@ -40,7 +40,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		short := keygen.KeyGenerate()
 		resp := Resp{
 			ID:    val.ID,
-			Short: short,
+			Short: fmt.Sprintf(a.cfg.ResultURL+"/%s", short),
 		}
 		link := entities.Link{
 			Short:    short,
