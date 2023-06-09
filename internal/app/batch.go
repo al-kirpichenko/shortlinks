@@ -37,6 +37,8 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, val := range originals {
+
+		log.Println(val.URL)
 		short := keygen.KeyGenerate()
 		resp := Resp{
 			ID:    val.ID,
