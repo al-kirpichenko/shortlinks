@@ -16,9 +16,8 @@ type Req struct {
 }
 
 type Resp struct {
-	ID       string `json:"correlation_id"`
-	Short    string `json:"short_url"`
-	Original string `json:"-"`
+	ID    string `json:"correlation_id"`
+	Short string `json:"short_url"`
 }
 
 func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
