@@ -67,6 +67,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Println("делаем запрос на получение оригинальных")
 		log.Println(link2.Short + " ***** " + link2.Original)
+
 	}
 
 	response, err := json.Marshal(shorts)
