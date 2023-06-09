@@ -31,7 +31,9 @@ func (l *Link) Insert(link entities.Link) error {
 }
 
 func (l *Link) InsertLinks(links []entities.Link) error {
-
+	if err := l.CreateTable(); err != nil {
+		return err
+	}
 	tx, err := l.Store.DB.Begin()
 	if err != nil {
 		return err
