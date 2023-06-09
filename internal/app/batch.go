@@ -62,7 +62,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//проверка
-	for _, v := range shorts {
+	for _, v := range links {
 		link2, err := a.Storage.GetOriginal(v.Short)
 		if err != nil {
 			log.Println(err)
