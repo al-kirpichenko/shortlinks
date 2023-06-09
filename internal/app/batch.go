@@ -38,7 +38,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 
 	for _, val := range originals {
 
-		log.Println(val.URL)
+		log.Println("получен url" + val.URL)
 		short := keygen.KeyGenerate()
 		resp := Resp{
 			ID:    val.ID,
@@ -52,7 +52,6 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		shorts = append(shorts, resp)
 		links = append(links, link)
 
-		log.Println(link.Short + "---" + link.Original)
 	}
 
 	if err := a.Storage.InsertLinks(links); err != nil {
