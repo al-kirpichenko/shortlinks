@@ -61,6 +61,16 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//проверка
+	for _, v := range shorts {
+		link2, err := a.Storage.GetOriginal(v.Short)
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("делаем запрос на получение оригинальных")
+		log.Println(link2.Short + " ***** " + link2.Original)
+	}
+
 	response, err := json.Marshal(shorts)
 
 	if err != nil {
