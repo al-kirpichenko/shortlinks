@@ -38,7 +38,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 	for _, val := range originals {
 
 		log.Println("получен url " + val.URL)
-		key := keygen.KeyGenerate()
+		key := keygen.GenerateKey()
 		log.Println("сгенерирована короткая ссылка " + key)
 		resp := Resp{
 			ID:    val.ID,

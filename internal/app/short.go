@@ -24,7 +24,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	link := entities.Link{
-		Short:    keygen.KeyGenerate(),
+		Short:    keygen.GenerateKey(),
 		Original: string(responseData),
 	}
 

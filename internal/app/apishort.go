@@ -28,7 +28,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	link := entities.Link{
-		Short:    keygen.KeyGenerate(),
+		Short:    keygen.GenerateKey(),
 		Original: req.URL,
 	}
 
