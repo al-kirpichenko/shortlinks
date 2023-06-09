@@ -1,0 +1,56 @@
+run:
+  skip-dirs:
+    - internal/generated
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+  govet:
+    check-shadowing: false
+    settings:
+      printf:
+        funcs:
+          - printf
+          - debugf
+          - infof
+          - warnf
+          - errorf
+          - fatalf
+          - wrapf
+  gocyclo:
+    min-complexity: 12
+    suggest-new: true
+  misspell:
+    locale: US
+  unparam:
+    check-exported: true
+
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - gosimple
+    - unused
+    - revive
+    - unconvert
+    - goconst
+    - misspell
+    - unparam
+    - prealloc
+    - exportloopref
+    - gochecknoinits
+    - gocritic
+    - dupl
+    - gocyclo
+    - goimports
+    - ineffassign
+    - gomnd
+    - wsl
+    - godot
+    - gochecknoglobals
+    - whitespace
+  fast: false
+

@@ -2,8 +2,9 @@ package pg
 
 import (
 	"database/sql"
-	_ "github.com/jackc/pgx/v5/stdlib"
 	"log"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type PG struct {

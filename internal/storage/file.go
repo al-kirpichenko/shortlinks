@@ -1,46 +1,52 @@
 package storage
 
 import (
-	"bufio"
-	"encoding/json"
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
 	"log"
-	"os"
+
+	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/services/file"
 )
 
-func SaveToFile(link *entities.Link, fileName string) error {
+type FileStorage struct {
+	memStorage *InMemoryStorage
+	filePATH   string
+}
 
-	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+func NewFileStorage(path string) *FileStorage {
+	return &FileStorage{
+		memStorage: NewInMemoryStorage(),
+		filePATH:   path,
+	}
+}
+
+func (fs *FileStorage) Load(data map[string]string) {
+	fs.memStorage.Load(data)
+}
+
+func (fs *FileStorage) Insert(link *entities.Link) error {
+
+	err := fs.memStorage.Insert(link)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
-	encoder := json.NewEncoder(file)
-	err = encoder.Encode(link)
-	return err
+	err2 := file.SaveToFile(link, fs.filePATH)
+	if err2 != nil {
+		return err2
+	}
+	return nil
 }
 
-func LoadFromFile(fileName string) (map[string]string, error) {
+func (fs *FileStorage) InsertLinks(links []*entities.Link) error {
+	return nil
+}
 
-	file, err := os.OpenFile(fileName, os.O_RDONLY|os.O_CREATE, 0666)
+func (fs *FileStorage) GetOriginal(short string) (*entities.Link, error) {
+
+	link, err := fs.memStorage.GetOriginal(short)
+
 	if err != nil {
+		log.Println("")
 		return nil, err
 	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-
-	data := make(map[string]string)
-
-	for scanner.Scan() {
-
-		var d entities.Link
-		err = json.Unmarshal(scanner.Bytes(), &d)
-		if err != nil {
-			log.Println(err)
-		}
-
-		data[d.Short] = d.Original
-	}
-	return data, nil
+	return link, nil
 }
