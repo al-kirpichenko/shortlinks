@@ -2,12 +2,15 @@ package app
 
 import (
 	"context"
-	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
-	"github.com/go-chi/chi/v5"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
+	"github.com/al-kirpichenko/shortlinks/internal/entities"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_GetOriginalURL(t *testing.T) {
@@ -46,7 +49,12 @@ func Test_GetOriginalURL(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			app.Storage.SetURL(test.body, resultURL)
+			link := entities.Link{
+				Short:    test.body,
+				Original: resultURL,
+			}
+
+			app.Storage.Insert(&link)
 
 			r := httptest.NewRequest(test.method, "http://localhost:8080/"+test.body, nil)
 
