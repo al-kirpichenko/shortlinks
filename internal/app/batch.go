@@ -49,6 +49,8 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 
 		shorts = append(shorts, resp)
 		links = append(links, link)
+
+		log.Println(link.Short + "---" + link.Original)
 	}
 
 	if err := a.Storage.InsertLinks(links); err != nil {
