@@ -9,7 +9,7 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/entities"
 )
 
-func SaveToFile(link *entities.Link, fileName string) error {
+func SaveToFile(link entities.Link, fileName string) error {
 
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -18,6 +18,20 @@ func SaveToFile(link *entities.Link, fileName string) error {
 	defer file.Close()
 	encoder := json.NewEncoder(file)
 	err = encoder.Encode(link)
+	return err
+}
+
+func AllSaveToFile(links []entities.Link, fileName string) error {
+
+	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	encoder := json.NewEncoder(file)
+	for _, v := range links {
+		err = encoder.Encode(v)
+	}
 	return err
 }
 

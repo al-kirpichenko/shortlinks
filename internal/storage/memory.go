@@ -20,12 +20,16 @@ func (s *InMemoryStorage) Load(data map[string]string) {
 	s.urls = data
 }
 
-func (s *InMemoryStorage) Insert(link *entities.Link) error {
+func (s *InMemoryStorage) Insert(link entities.Link) error {
 	s.urls[link.Short] = link.Original
 	return nil
 }
 
-func (s *InMemoryStorage) InsertLinks(links []*entities.Link) error {
+func (s *InMemoryStorage) InsertLinks(links []entities.Link) error {
+
+	for _, v := range links {
+		s.urls[v.Short] = v.Original
+	}
 	return nil
 }
 

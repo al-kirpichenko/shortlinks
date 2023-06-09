@@ -18,7 +18,7 @@ func (l *Link) CreateTable() error {
 	return nil
 }
 
-func (l *Link) Insert(link *entities.Link) error {
+func (l *Link) Insert(link entities.Link) error {
 	if err := l.CreateTable(); err != nil {
 		return err
 	}
@@ -30,8 +30,28 @@ func (l *Link) Insert(link *entities.Link) error {
 	return nil
 }
 
-func (l *Link) InsertLinks(links []*entities.Link) error {
-	return nil
+func (l *Link) InsertLinks(links []entities.Link) error {
+
+	tx, err := l.Store.DB.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	stmt, err := tx.Prepare(
+		"INSERT INTO links (short, original) VALUES($1,$2)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	for _, v := range links {
+		_, err := stmt.Exec(v.Short, v.Original)
+		if err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }
 
 func (l *Link) GetOriginal(short string) (*entities.Link, error) {

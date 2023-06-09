@@ -28,21 +28,6 @@ func (a *App) GetConfig() *config.AppConfig {
 	return a.cfg
 }
 
-//func (a *App) ConfigureDB() error {
-//
-//	if a.cfg.DataBaseString != "" {
-//		db := pg.NewDB(a.cfg.DataBaseString)
-//		if err := db.Open(); err != nil {
-//			log.Println(err)
-//			return err
-//		}
-//		a.DataBase = db
-//		a.DBReady = true
-//		return nil
-//	}
-//	return errors.New("dataBaseString is empty")
-//}
-
 func confDB(conn string) (*pg.PG, error) {
 	db := pg.NewDB(conn)
 	if err := db.Open(); err != nil {

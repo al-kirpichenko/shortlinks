@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -54,7 +55,9 @@ func Test_GetOriginalURL(t *testing.T) {
 				Original: resultURL,
 			}
 
-			app.Storage.Insert(&link)
+			if err := app.Storage.Insert(link); err != nil {
+				log.Println(err)
+			}
 
 			r := httptest.NewRequest(test.method, "http://localhost:8080/"+test.body, nil)
 

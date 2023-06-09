@@ -32,32 +32,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 		Original: req.URL,
 	}
 
-	//if a.DBReady {
-	//
-	//	linkModel := models.Link{
-	//		Store: a.DataBase,
-	//	}
-	//	_, err = linkModel.Insert(&link)
-	//	if err != nil {
-	//		log.Println("Don't insert url!")
-	//		log.Println(err)
-	//		http.Error(w, err.Error(), http.StatusInternalServerError)
-	//		return
-	//	}
-	//} else {
-	//	if a.cfg.FilePATH != "" {
-	//
-	//		err = storage.SaveToFile(&link, a.cfg.FilePATH)
-	//		if err != nil {
-	//			log.Println(err)
-	//			http.Error(w, err.Error(), http.StatusInternalServerError)
-	//			return
-	//		}
-	//	}
-	//	a.Storage.SetURL(link.Short, link.Original)
-	//}
-
-	if err := a.Storage.Insert(&link); err != nil {
+	if err := a.Storage.Insert(link); err != nil {
 		log.Println("Don't insert url!")
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)

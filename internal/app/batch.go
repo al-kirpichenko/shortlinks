@@ -2,9 +2,11 @@ package app
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	_ "github.com/al-kirpichenko/shortlinks/internal/entities"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 )
 
@@ -29,6 +31,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&originals)
 	if err != nil {
+		log.Println("don't decode body")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -43,8 +46,30 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 			Short:    short,
 			Original: val.URL,
 		}
+
 		shorts = append(shorts, resp)
 		links = append(links, link)
+	}
+
+	if err := a.Storage.InsertLinks(links); err != nil {
+		log.Println("Don't insert to table")
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	response, err := json.Marshal(shorts)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+
+	_, err = w.Write(response)
+	if err != nil {
+		return
 	}
 
 }

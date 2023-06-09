@@ -15,5 +15,4 @@ func (a *App) Ping(w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	return
 }
