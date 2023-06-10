@@ -54,7 +54,6 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	response := strings.TrimSpace(fmt.Sprintf(a.cfg.ResultURL+"/%s", link.Short))
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(status)
-	log.Println(response)
 
 	_, err = io.WriteString(w, response)
 	if err != nil {
