@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/al-kirpichenko/shortlinks/internal/entities"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
@@ -50,7 +51,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", link.Short)
+	response := strings.TrimSpace(fmt.Sprintf(a.cfg.ResultURL+"/%s", link.Short))
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(status)
 	log.Println(response)
