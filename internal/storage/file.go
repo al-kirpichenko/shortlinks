@@ -23,20 +23,20 @@ func (fs *FileStorage) Load(data map[string]string) {
 	fs.memStorage.Load(data)
 }
 
-func (fs *FileStorage) Insert(link entities.Link) error {
+func (fs *FileStorage) Insert(link *entities.Link) (*entities.Link, error) {
 
-	err := fs.memStorage.Insert(link)
+	_, err := fs.memStorage.Insert(link)
 	if err != nil {
-		return err
+		return link, err
 	}
 	err2 := file.SaveToFile(link, fs.filePATH)
 	if err2 != nil {
-		return err2
+		return link, err2
 	}
-	return nil
+	return link, nil
 }
 
-func (fs *FileStorage) InsertLinks(links []entities.Link) error {
+func (fs *FileStorage) InsertLinks(links []*entities.Link) error {
 
 	err := fs.memStorage.InsertLinks(links)
 	if err != nil {
@@ -49,9 +49,20 @@ func (fs *FileStorage) InsertLinks(links []entities.Link) error {
 	return err
 }
 
-func (fs *FileStorage) GetOriginal(short string) (entities.Link, error) {
+func (fs *FileStorage) GetOriginal(short string) (*entities.Link, error) {
 
 	link, err := fs.memStorage.GetOriginal(short)
+
+	if err != nil {
+		log.Println("")
+		return link, err
+	}
+	return link, nil
+}
+
+func (fs *FileStorage) GetShort(original string) (*entities.Link, error) {
+
+	link, err := fs.memStorage.GetShort(original)
 
 	if err != nil {
 		log.Println("")
