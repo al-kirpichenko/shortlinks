@@ -50,12 +50,12 @@ func Test_GetOriginalURL(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			link := entities.Link{
+			link := &entities.Link{
 				Short:    test.body,
 				Original: resultURL,
 			}
 
-			if err := app.Storage.Insert(link); err != nil {
+			if _, err := app.Storage.Insert(link); err != nil {
 				log.Println(err)
 			}
 
