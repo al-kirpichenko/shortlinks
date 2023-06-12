@@ -23,6 +23,7 @@ func Test_GetOriginalURL(t *testing.T) {
 	}
 
 	app := NewApp(conf)
+	app.ConfigureStorage()
 
 	resultURL := "https://yandex.ru"
 
