@@ -56,7 +56,7 @@ func Test_GetOriginalURL(t *testing.T) {
 				Original: resultURL,
 			}
 
-			if _, err := app.Storage.Insert(link); err != nil {
+			if err := app.Storage.Insert(link); err != nil {
 				log.Println(err)
 			}
 
