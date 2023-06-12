@@ -2,14 +2,13 @@ package app
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 
-	"github.com/jackc/pgerrcode"
-
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
-	"github.com/al-kirpichenko/shortlinks/internal/services/sqlerror"
+	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
 type Request struct {
@@ -37,7 +36,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err = a.Storage.Insert(link); err != nil {
-		if sqlerror.GetSQLState(err) == pgerrcode.UniqueViolation {
+		if errors.Is(err, storage.ErrConflict) {
 			link, err = a.Storage.GetShort(link.Original)
 			if err != nil {
 				log.Println("Don't read data from table")
