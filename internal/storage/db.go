@@ -5,10 +5,10 @@ import (
 	"log"
 
 	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5/pgconn"
 
 	"github.com/al-kirpichenko/shortlinks/internal/database/pg"
 	"github.com/al-kirpichenko/shortlinks/internal/models"
-	"github.com/al-kirpichenko/shortlinks/internal/services/sqlerror"
 )
 
 var ErrConflict = errors.New("conflict on inserting new record")
@@ -31,8 +31,11 @@ func (l *Link) Insert(link *models.Link) error {
 	if _, err := l.Store.DB.Exec(
 		"INSERT INTO links (short, original) VALUES ($1,$2)",
 		link.Short, link.Original); err != nil {
-		if sqlerror.GetSQLState(err) == pgerrcode.UniqueViolation {
-			err = ErrConflict
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			if pgErr.Code == pgerrcode.UniqueViolation {
+				err = ErrConflict
+			}
 		}
 		return err
 	}
