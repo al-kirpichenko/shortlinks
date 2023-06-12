@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 )
 
@@ -25,7 +25,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 	var (
 		originals []Req
 		shorts    []Resp
-		links     []*entities.Link
+		links     []*models.Link
 	)
 
 	err := json.NewDecoder(r.Body).Decode(&originals)
@@ -42,7 +42,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 			ID:    val.ID,
 			Short: fmt.Sprintf(a.cfg.ResultURL+"/%s", key),
 		}
-		link := &entities.Link{
+		link := &models.Link{
 			Short:    key,
 			Original: val.URL,
 		}

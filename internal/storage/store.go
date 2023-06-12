@@ -1,10 +1,12 @@
 package storage
 
-import "github.com/al-kirpichenko/shortlinks/internal/entities"
+import (
+	"github.com/al-kirpichenko/shortlinks/internal/models"
+)
 
 type Storage interface {
-	Insert(link *entities.Link) (*entities.Link, error)
-	InsertLinks(links []*entities.Link) error
-	GetOriginal(short string) (*entities.Link, error)
-	GetShort(original string) (*entities.Link, error)
+	Insert(link *models.Link) error
+	InsertLinks(links []*models.Link) error
+	GetOriginal(short string) (*models.Link, error)
+	GetShort(original string) (*models.Link, error)
 }

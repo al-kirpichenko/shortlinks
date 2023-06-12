@@ -1,17 +1,16 @@
 package app
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"strings"
 
-	"github.com/jackc/pgerrcode"
-
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
-	"github.com/al-kirpichenko/shortlinks/internal/services/sqlerror"
+	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
 func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
@@ -29,20 +28,13 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link := &entities.Link{
+	link := &models.Link{
 		Short:    keygen.GenerateKey(),
 		Original: string(responseData),
 	}
 
-	// "можно сделать меньше if-else: нашли ошибку - вернули. Продолжаем писать код зная что ошибка обработана" -
-	// нельзя! в случае ошибки тут мы проверяем какая именно ошибка! если ошибка нам говорит о том, что такое значение уже есть,
-	// то тогда делаем запрос для получения короткой ссылки из бд
-	// это можно было бы сделать на уровне модели, но тогда хендлер никак не узнает о том, что нужно вернуть статус 409 вместо 201
-
-	if link, err = a.Storage.Insert(link); err != nil {
-		log.Println("Don't insert url!")
-		log.Println(err)
-		if sqlerror.GetSQLState(err) == pgerrcode.UniqueViolation {
+	if err = a.Storage.Insert(link); err != nil {
+		if errors.Is(err, storage.ErrConflict) {
 			link, err = a.Storage.GetShort(link.Original)
 			if err != nil {
 				log.Println("Don't read data from table")
@@ -52,6 +44,8 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 			}
 			status = http.StatusConflict
 		} else {
+			log.Println("Don't insert url!")
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

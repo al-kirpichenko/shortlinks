@@ -3,7 +3,7 @@ package storage
 import (
 	"log"
 
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/file"
 )
 
@@ -23,20 +23,20 @@ func (fs *FileStorage) Load(data map[string]string) {
 	fs.memStorage.Load(data)
 }
 
-func (fs *FileStorage) Insert(link *entities.Link) (*entities.Link, error) {
+func (fs *FileStorage) Insert(link *models.Link) error {
 
-	_, err := fs.memStorage.Insert(link)
+	err := fs.memStorage.Insert(link)
 	if err != nil {
-		return link, err
+		return err
 	}
 	err2 := file.SaveToFile(link, fs.filePATH)
 	if err2 != nil {
-		return link, err2
+		return err2
 	}
-	return link, nil
+	return nil
 }
 
-func (fs *FileStorage) InsertLinks(links []*entities.Link) error {
+func (fs *FileStorage) InsertLinks(links []*models.Link) error {
 
 	err := fs.memStorage.InsertLinks(links)
 	if err != nil {
@@ -49,7 +49,7 @@ func (fs *FileStorage) InsertLinks(links []*entities.Link) error {
 	return err
 }
 
-func (fs *FileStorage) GetOriginal(short string) (*entities.Link, error) {
+func (fs *FileStorage) GetOriginal(short string) (*models.Link, error) {
 
 	link, err := fs.memStorage.GetOriginal(short)
 
@@ -60,7 +60,7 @@ func (fs *FileStorage) GetOriginal(short string) (*entities.Link, error) {
 	return link, nil
 }
 
-func (fs *FileStorage) GetShort(original string) (*entities.Link, error) {
+func (fs *FileStorage) GetShort(original string) (*models.Link, error) {
 
 	link, err := fs.memStorage.GetShort(original)
 

@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
@@ -51,7 +51,7 @@ func Test_GetOriginalURL(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 
-			link := &entities.Link{
+			link := &models.Link{
 				Short:    test.body,
 				Original: resultURL,
 			}

@@ -3,7 +3,7 @@ package storage
 import (
 	"errors"
 
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 )
 
 type InMemoryStorage struct {
@@ -20,12 +20,12 @@ func (s *InMemoryStorage) Load(data map[string]string) {
 	s.urls = data
 }
 
-func (s *InMemoryStorage) Insert(link *entities.Link) (*entities.Link, error) {
+func (s *InMemoryStorage) Insert(link *models.Link) error {
 	s.urls[link.Short] = link.Original
-	return link, nil
+	return nil
 }
 
-func (s *InMemoryStorage) InsertLinks(links []*entities.Link) error {
+func (s *InMemoryStorage) InsertLinks(links []*models.Link) error {
 
 	for _, v := range links {
 		s.urls[v.Short] = v.Original
@@ -33,10 +33,10 @@ func (s *InMemoryStorage) InsertLinks(links []*entities.Link) error {
 	return nil
 }
 
-func (s *InMemoryStorage) GetOriginal(short string) (*entities.Link, error) {
+func (s *InMemoryStorage) GetOriginal(short string) (*models.Link, error) {
 
 	var ok bool
-	link := &entities.Link{
+	link := &models.Link{
 		Short: short,
 	}
 	link.Original, ok = s.urls[link.Short]
@@ -46,9 +46,9 @@ func (s *InMemoryStorage) GetOriginal(short string) (*entities.Link, error) {
 	return link, errors.New("id not found")
 }
 
-func (s *InMemoryStorage) GetShort(original string) (*entities.Link, error) {
+func (s *InMemoryStorage) GetShort(original string) (*models.Link, error) {
 
-	link := &entities.Link{
+	link := &models.Link{
 		Original: original,
 	}
 

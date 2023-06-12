@@ -6,10 +6,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 )
 
-func SaveToFile(link *entities.Link, fileName string) error {
+func SaveToFile(link *models.Link, fileName string) error {
 
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -21,7 +21,7 @@ func SaveToFile(link *entities.Link, fileName string) error {
 	return err
 }
 
-func AllSaveToFile(links []*entities.Link, fileName string) error {
+func AllSaveToFile(links []*models.Link, fileName string) error {
 
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -49,7 +49,7 @@ func LoadFromFile(fileName string) (map[string]string, error) {
 
 	for scanner.Scan() {
 
-		var d entities.Link
+		var d models.Link
 		err = json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
 			log.Println(err)

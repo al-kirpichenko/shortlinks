@@ -7,7 +7,7 @@ import (
 
 	"github.com/jackc/pgerrcode"
 
-	"github.com/al-kirpichenko/shortlinks/internal/entities"
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/services/sqlerror"
 )
@@ -31,17 +31,12 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	link := &entities.Link{
+	link := &models.Link{
 		Short:    keygen.GenerateKey(),
 		Original: req.URL,
 	}
 
-	// "можно сделать меньше if-else: нашли ошибку - вернули. Продолжаем писать код зная что ошибка обработана" -
-	// нельзя! в случае ошибки тут мы проверяем какая именно ошибка! если ошибка нам говорит о том, что такое значение уже есть,
-	// то тогда делаем запрос для получения короткой ссылки из бд
-	if link, err = a.Storage.Insert(link); err != nil {
-		log.Println("Don't insert url!")
-		log.Println(err)
+	if err = a.Storage.Insert(link); err != nil {
 		if sqlerror.GetSQLState(err) == pgerrcode.UniqueViolation {
 			link, err = a.Storage.GetShort(link.Original)
 			if err != nil {
@@ -52,6 +47,8 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 			}
 			status = http.StatusConflict
 		} else {
+			log.Println("Don't insert url!")
+			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
