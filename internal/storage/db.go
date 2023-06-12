@@ -11,8 +11,6 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 )
 
-var ErrConflict = errors.New("conflict on inserting new record")
-
 type Link struct {
 	Store *pg.PG
 }
