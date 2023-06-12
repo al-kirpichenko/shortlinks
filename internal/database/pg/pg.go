@@ -18,6 +18,24 @@ func NewDB(conf string) *PG {
 	}
 }
 
+func InitDB(conn string) *PG {
+	if conn == "" {
+		return nil
+	}
+	db := NewDB(conn)
+	if err := db.Open(); err != nil {
+		log.Println("Don't connect DataBase")
+		log.Fatal(err)
+		return nil
+	}
+	if err := db.PingDB(); err != nil {
+		log.Println("Don't ping DataBase")
+		log.Fatal(err)
+		return nil
+	}
+	return db
+}
+
 func (pg *PG) Open() error {
 
 	db, err := sql.Open("pgx", pg.databaseConf)

@@ -6,6 +6,7 @@ import (
 
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"
+	"github.com/al-kirpichenko/shortlinks/internal/database/pg"
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 	"github.com/al-kirpichenko/shortlinks/internal/routes"
 )
@@ -18,15 +19,12 @@ func main() {
 
 	newApp := app.NewApp(conf)
 
+	newApp.DB = pg.InitDB(conf.DataBaseString)
+	defer newApp.DB.Close()
+
 	newApp.ConfigureStorage()
 
-	run(newApp)
+	router := routes.Router(newApp)
 
-}
-
-func run(app *app.App) {
-
-	router := routes.Router(app)
-
-	log.Fatal(http.ListenAndServe(app.GetConfig().Host, router))
+	log.Fatal(http.ListenAndServe(conf.Host, router))
 }
