@@ -54,6 +54,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 
 	if err := a.Storage.InsertLinks(links); err != nil {
 		log.Println("Don't insert to table")
+		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

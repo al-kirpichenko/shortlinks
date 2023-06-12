@@ -51,7 +51,7 @@ func (l *Link) InsertLinks(links []*entities.Link) error {
 	defer tx.Rollback()
 
 	stmt, err := tx.Prepare(
-		"INSERT INTO links (short, original) VALUES($1,$2) ON CONFLICT (original, short) DO NOTHING ")
+		"INSERT INTO links (short, original) VALUES($1,$2)")
 	if err != nil {
 		return err
 	}
