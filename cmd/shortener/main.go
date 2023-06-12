@@ -18,6 +18,8 @@ func main() {
 
 	newApp := app.NewApp(conf)
 
+	newApp.ConfigureStorage()
+
 	run(newApp)
 
 }

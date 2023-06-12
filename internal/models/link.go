@@ -12,7 +12,7 @@ type Link struct {
 }
 
 func (l *Link) CreateTable() error {
-	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , short CHAR (20), original CHAR (255) UNIQUE );"); err != nil {
+	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , short CHAR (20) UNIQUE, original CHAR (255) UNIQUE );"); err != nil {
 		return err
 	}
 	return nil
@@ -51,7 +51,7 @@ func (l *Link) InsertLinks(links []*entities.Link) error {
 	defer tx.Rollback()
 
 	stmt, err := tx.Prepare(
-		"INSERT INTO links (short, original) VALUES($1,$2) ON CONFLICT (original) DO NOTHING ")
+		"INSERT INTO links (short, original) VALUES($1,$2) ON CONFLICT (original, short) DO NOTHING ")
 	if err != nil {
 		return err
 	}

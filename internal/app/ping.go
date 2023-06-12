@@ -7,7 +7,7 @@ import (
 
 func (a *App) Ping(w http.ResponseWriter, _ *http.Request) {
 
-	_, err := confDB(a.GetConfig().DataBaseString)
+	err := a.DB.PingDB()
 
 	if err != nil {
 		log.Println("don't ping Database")

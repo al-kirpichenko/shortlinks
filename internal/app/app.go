@@ -18,18 +18,19 @@ type App struct {
 
 func NewApp(cfg *config.AppConfig) *App {
 
-	return &App{
-		cfg:     cfg,
-		Storage: ConfigureStorage(cfg),
+	app := &App{
+		cfg: cfg,
 	}
+
+	return app
 }
 
 func (a *App) GetConfig() *config.AppConfig {
 	return a.cfg
 }
 
-func confDB(conn string) (*pg.PG, error) {
-	db := pg.NewDB(conn)
+func (a *App) confDB() (*pg.PG, error) {
+	db := pg.NewDB(a.cfg.DataBaseString)
 	if err := db.Open(); err != nil {
 		return nil, err
 	}
@@ -39,34 +40,35 @@ func confDB(conn string) (*pg.PG, error) {
 	return db, nil
 }
 
-func ConfigureStorage(conf *config.AppConfig) storage.Storage {
-	if conf.DataBaseString != "" {
-		db, err := confDB(conf.DataBaseString)
+func (a *App) ConfigureStorage() {
+	if a.cfg.DataBaseString != "" {
+		log.Println("start configure db")
+		db, err := a.confDB()
 		if err == nil {
-			return &models.Link{
+			a.Storage = &models.Link{
 				Store: db,
 			}
+			a.DB = db
 		} else {
 			log.Fatal(err)
-			return nil
 		}
 
-	} else if conf.FilePATH != "" {
-		store := storage.NewFileStorage(conf.FilePATH)
+	} else if a.cfg.FilePATH != "" {
+		store := storage.NewFileStorage(a.cfg.FilePATH)
 
-		data, err := file.LoadFromFile(conf.FilePATH)
+		data, err := file.LoadFromFile(a.cfg.FilePATH)
 
 		store.Load(data)
 
 		if err != nil {
 			log.Println("Don't load from file!")
 			log.Fatal(err)
-			return nil
 		}
 
 		store.Load(data)
 
-		return store
+		a.Storage = store
+	} else {
+		a.Storage = storage.NewInMemoryStorage()
 	}
-	return storage.NewInMemoryStorage()
 }
