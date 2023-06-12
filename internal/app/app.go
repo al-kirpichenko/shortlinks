@@ -14,10 +14,9 @@ type App struct {
 
 func NewApp(cfg *config.AppConfig) *App {
 
-	a := App{
+	return &App{
 		cfg: cfg,
 	}
-	return &a
 }
 
 func (a *App) ConfigureStorage() {
