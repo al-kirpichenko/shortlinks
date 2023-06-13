@@ -16,6 +16,7 @@ func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{
 		cfg: cfg,
+		DB:  pg.InitDB(cfg.DataBaseString),
 	}
 }
 
