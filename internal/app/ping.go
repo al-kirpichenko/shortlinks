@@ -1,8 +1,9 @@
 package app
 
 import (
-	"log"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 func (a *App) Ping(w http.ResponseWriter, _ *http.Request) {
@@ -10,7 +11,7 @@ func (a *App) Ping(w http.ResponseWriter, _ *http.Request) {
 	err := a.DB.PingDB()
 
 	if err != nil {
-		log.Println("don't ping Database")
+		zap.L().Error("Don't ping Database", zap.Error(err))
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

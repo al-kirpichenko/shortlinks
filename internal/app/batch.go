@@ -3,8 +3,9 @@ package app
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
@@ -52,7 +53,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := a.Storage.InsertLinks(links); err != nil {
-		log.Println(err)
+		zap.L().Error("Don't insert URLs", zap.Error(err))
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

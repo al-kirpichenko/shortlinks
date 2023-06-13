@@ -3,8 +3,9 @@ package file
 import (
 	"bufio"
 	"encoding/json"
-	"log"
 	"os"
+
+	"go.uber.org/zap"
 
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 )
@@ -52,7 +53,7 @@ func LoadFromFile(fileName string) (map[string]string, error) {
 		var d models.Link
 		err = json.Unmarshal(scanner.Bytes(), &d)
 		if err != nil {
-			log.Println(err)
+			zap.L().Error("error scan ", zap.Error(err))
 		}
 
 		data[d.Short] = d.Original

@@ -54,7 +54,9 @@ func (pg *PG) Open() error {
 }
 
 func (pg *PG) Close() {
-	pg.DB.Close()
+	if pg.DB != nil {
+		pg.DB.Close()
+	}
 }
 
 func (pg *PG) PingDB() error {

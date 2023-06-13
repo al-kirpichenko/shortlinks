@@ -2,10 +2,10 @@ package storage
 
 import (
 	"errors"
-	"log"
 
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
+	"go.uber.org/zap"
 
 	"github.com/al-kirpichenko/shortlinks/internal/database/pg"
 	"github.com/al-kirpichenko/shortlinks/internal/models"
@@ -78,7 +78,7 @@ func (l *Link) GetOriginal(short string) (*models.Link, error) {
 		Short: short,
 	}
 	if err := l.Store.DB.QueryRow("SELECT original FROM links WHERE short = $1", link.Short).Scan(&link.Original); err != nil {
-		log.Println(err)
+		zap.L().Error("Don't get original URL", zap.Error(err))
 		return link, err
 	}
 	return link, nil
@@ -90,7 +90,7 @@ func (l *Link) GetShort(original string) (*models.Link, error) {
 		Original: original,
 	}
 	if err := l.Store.DB.QueryRow("SELECT short FROM links WHERE original = $1", link.Original).Scan(&link.Short); err != nil {
-		log.Println(err)
+		zap.L().Error("Don't get short URL", zap.Error(err))
 		return &link, err
 	}
 	return &link, nil

@@ -3,8 +3,9 @@ package app
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
@@ -39,13 +40,13 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 		if errors.Is(err, storage.ErrConflict) {
 			link, err = a.Storage.GetShort(link.Original)
 			if err != nil {
-				log.Println(err)
+				zap.L().Error("Don't get short URL", zap.Error(err))
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 			status = http.StatusConflict
 		} else {
-			log.Println(err)
+			zap.L().Error("Don't insert URL", zap.Error(err))
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

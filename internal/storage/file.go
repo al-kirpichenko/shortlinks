@@ -1,7 +1,7 @@
 package storage
 
 import (
-	"log"
+	"go.uber.org/zap"
 
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/file"
@@ -27,8 +27,7 @@ func (fs *FileStorage) ConfigureFileStorage() {
 	data, err := file.LoadFromFile(fs.filePATH)
 
 	if err != nil {
-		log.Println("Don't load from file!")
-		log.Fatal(err)
+		zap.L().Fatal("Don't load from file!", zap.Error(err))
 	}
 
 	fs.Load(data)
@@ -69,7 +68,7 @@ func (fs *FileStorage) GetOriginal(short string) (*models.Link, error) {
 	link, err := fs.memStorage.GetOriginal(short)
 
 	if err != nil {
-		log.Println("")
+		zap.L().Error("Don't get original URL", zap.Error(err))
 		return link, err
 	}
 	return link, nil
@@ -80,7 +79,7 @@ func (fs *FileStorage) GetShort(original string) (*models.Link, error) {
 	link, err := fs.memStorage.GetShort(original)
 
 	if err != nil {
-		log.Println("")
+		zap.L().Error("Don't get short URL", zap.Error(err))
 		return link, err
 	}
 	return link, nil
