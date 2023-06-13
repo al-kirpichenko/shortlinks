@@ -37,14 +37,12 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		if errors.Is(err, storage.ErrConflict) {
 			link, err = a.Storage.GetShort(link.Original)
 			if err != nil {
-				log.Println("Don't read data from table")
 				log.Println(err)
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
 			status = http.StatusConflict
 		} else {
-			log.Println("Don't insert url!")
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

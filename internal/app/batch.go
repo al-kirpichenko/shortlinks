@@ -30,7 +30,6 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 
 	err := json.NewDecoder(r.Body).Decode(&originals)
 	if err != nil {
-		log.Println("don't decode body")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -53,7 +52,6 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := a.Storage.InsertLinks(links); err != nil {
-		log.Println("Don't insert to table")
 		log.Println(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

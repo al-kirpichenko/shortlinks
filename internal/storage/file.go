@@ -12,6 +12,16 @@ type FileStorage struct {
 	filePATH   string
 }
 
+func NewFileStorage(path string) *FileStorage {
+	fs := FileStorage{
+		memStorage: NewInMemoryStorage(),
+		filePATH:   path,
+	}
+	fs.ConfigureFileStorage()
+
+	return &fs
+}
+
 func (fs *FileStorage) ConfigureFileStorage() {
 
 	data, err := file.LoadFromFile(fs.filePATH)
@@ -22,16 +32,6 @@ func (fs *FileStorage) ConfigureFileStorage() {
 	}
 
 	fs.Load(data)
-}
-
-func NewFileStorage(path string) *FileStorage {
-	fs := FileStorage{
-		memStorage: NewInMemoryStorage(),
-		filePATH:   path,
-	}
-	fs.ConfigureFileStorage()
-
-	return &fs
 }
 
 func (fs *FileStorage) Load(data map[string]string) {
