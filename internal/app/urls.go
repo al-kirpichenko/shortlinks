@@ -3,6 +3,7 @@ package app
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
@@ -23,19 +24,13 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		userID = ""
 	} else {
-		userID, err = userid.GetUserID(cook.String())
+		userID, err = userid.GetUserID(cook.Value)
 		if err != nil {
 			userID = ""
 		}
 	}
 
-	//token := r.Context().Value(Token).(string)
-	//
-	//userID, err := userid.GetUserID(token)
-	//if err != nil {
-	//	w.WriteHeader(http.StatusUnauthorized)
-	//	return
-	//}
+	log.Println(userID)
 
 	userURLs, err := a.Storage.GetAllByUserID(userID)
 

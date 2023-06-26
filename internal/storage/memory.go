@@ -60,6 +60,6 @@ func (s *InMemoryStorage) GetShort(original string) (*models.Link, error) {
 	}
 	return link, errors.New("id not found")
 }
-func (s *InMemoryStorage) GetAllByUserID(userID string) ([]*models.Link, error) {
+func (s *InMemoryStorage) GetAllByUserID(userID string) ([]models.Link, error) {
 	return nil, nil
 }

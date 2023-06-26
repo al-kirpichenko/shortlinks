@@ -27,7 +27,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		userID = ""
 	} else {
-		userID, err = userid.GetUserID(cook.String())
+		userID, err = userid.GetUserID(cook.Value)
 		if err != nil {
 			userID = ""
 		}

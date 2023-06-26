@@ -96,11 +96,11 @@ func (l *Link) GetShort(original string) (*models.Link, error) {
 	return &link, nil
 }
 
-func (l *Link) GetAllByUserID(userID string) ([]*models.Link, error) {
+func (l *Link) GetAllByUserID(userID string) ([]models.Link, error) {
 
-	var links []*models.Link
+	var links []models.Link
 
-	rows, err := l.Store.DB.Query("SELECT original, short FROM links WHERE userid = $1", userID)
+	rows, err := l.Store.DB.Query("SELECT original, short, userid FROM links WHERE userid = $1", userID)
 	if err != nil {
 		zap.L().Error("Don't get original URL", zap.Error(err))
 		return nil, err
@@ -108,8 +108,9 @@ func (l *Link) GetAllByUserID(userID string) ([]*models.Link, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var l *models.Link
-		err = rows.Scan(&l.Short, &l.Original, &l.UserID)
+
+		var l models.Link
+		err := rows.Scan(&l.Original, &l.Short, &l.UserID)
 		if err != nil {
 			return nil, err
 		}
