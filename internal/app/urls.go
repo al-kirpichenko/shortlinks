@@ -24,9 +24,11 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		userID = ""
+		log.Println("нет куки!")
 	} else {
 		userID, err = userid.GetUserID(cook.Value)
 		if err != nil {
+			log.Println("нет id в куке!")
 			userID = ""
 		}
 	}
@@ -34,8 +36,6 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 	log.Println(userID)
 
 	userURLs, err := a.Storage.GetAllByUserID(userID)
-
-	log.Println(userURLs)
 
 	if err != nil {
 		w.WriteHeader(http.StatusNoContent)
