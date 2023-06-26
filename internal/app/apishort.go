@@ -9,6 +9,7 @@ import (
 
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
+	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
@@ -25,7 +26,14 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	var req Request
 	var status = http.StatusCreated
 
-	err := json.NewDecoder(r.Body).Decode(&req)
+	token := r.Context().Value(Token).(string)
+
+	userID, err := userid.GetUserID(token)
+	if err != nil {
+		zap.L().Info("token is not found")
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -34,6 +42,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	link := &models.Link{
 		Short:    keygen.GenerateKey(),
 		Original: req.URL,
+		UserID:   userID,
 	}
 
 	if err = a.Storage.Insert(link); err != nil {

@@ -1,4 +1,4 @@
-package cookie
+package userid
 
 import (
 	"fmt"
@@ -6,18 +6,18 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
 
-	"github.com/al-kirpichenko/shortlinks/internal/services/JWTStringBuilder"
+	"github.com/al-kirpichenko/shortlinks/internal/services/jwtstringbuilder"
 )
 
 func GetUserID(tokenString string) (string, error) {
 	// создаём экземпляр структуры с утверждениями
-	claims := &JWTStringBuilder.Claims{}
+	claims := &jwtstringbuilder.Claims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims,
 		func(t *jwt.Token) (interface{}, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
 			}
-			return []byte(JWTStringBuilder.SECRET_KEY), nil
+			return []byte(jwtstringbuilder.SecretKey), nil
 		})
 	if err != nil {
 		return "", err

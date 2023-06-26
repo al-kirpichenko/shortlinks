@@ -24,6 +24,7 @@ func Router(app *app.App) http.Handler {
 	router.Post("/", app.GetShortURL)
 	router.Post("/api/shorten", app.APIGetShortURL)
 	router.Post("/api/shorten/batch", app.APIBatch)
+	router.Get("/api/user/urls", app.APIGetUserURLs)
 
 	return router
 

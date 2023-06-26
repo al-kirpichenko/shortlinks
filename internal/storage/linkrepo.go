@@ -22,7 +22,7 @@ func NewLinkStorage(db *pg.PG) *Link {
 }
 
 func (l *Link) CreateTable() error {
-	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid INT, short CHAR (20) UNIQUE, original CHAR (255) UNIQUE );"); err != nil {
+	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255), short CHAR (20) UNIQUE, original CHAR (255) UNIQUE );"); err != nil {
 		return err
 	}
 	return nil
@@ -33,8 +33,8 @@ func (l *Link) Insert(link *models.Link) error {
 		return err
 	}
 	if _, err := l.Store.DB.Exec(
-		"INSERT INTO links (short, original) VALUES ($1,$2)",
-		link.Short, link.Original); err != nil {
+		"INSERT INTO links (short, original, userid) VALUES ($1,$2,$3)",
+		link.Short, link.Original, link.UserID); err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {
 			if pgErr.Code == pgerrcode.UniqueViolation {
@@ -57,14 +57,14 @@ func (l *Link) InsertLinks(links []*models.Link) error {
 	defer tx.Rollback()
 
 	stmt, err := tx.Prepare(
-		"INSERT INTO links (short, original) VALUES($1,$2)")
+		"INSERT INTO links (short, original, userid) VALUES($1,$2,$3)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
 	for _, v := range links {
-		_, err := stmt.Exec(v.Short, v.Original)
+		_, err := stmt.Exec(v.Short, v.Original, v.UserID)
 		if err != nil {
 			return err
 		}
@@ -94,4 +94,32 @@ func (l *Link) GetShort(original string) (*models.Link, error) {
 		return &link, err
 	}
 	return &link, nil
+}
+
+func (l *Link) GetAllByUserID(userID string) ([]*models.Link, error) {
+
+	var links []*models.Link
+
+	rows, err := l.Store.DB.Query("SELECT original, short FROM links WHERE userid = $1", userID)
+	if err != nil {
+		zap.L().Error("Don't get original URL", zap.Error(err))
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var l *models.Link
+		err = rows.Scan(&l.Short, &l.Original, &l.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		links = append(links, l)
+	}
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return links, nil
 }

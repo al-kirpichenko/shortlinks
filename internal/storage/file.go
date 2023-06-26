@@ -84,3 +84,7 @@ func (fs *FileStorage) GetShort(original string) (*models.Link, error) {
 	}
 	return link, nil
 }
+
+func (fs *FileStorage) GetAllByUserID(userID string) ([]*models.Link, error) {
+	return nil, nil
+}

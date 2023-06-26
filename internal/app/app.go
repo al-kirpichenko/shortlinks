@@ -6,6 +6,10 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
+type contextKey string
+
+const Token contextKey = "token"
+
 type App struct {
 	cfg     *config.AppConfig
 	DB      *pg.PG

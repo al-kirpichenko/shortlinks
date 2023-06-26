@@ -9,6 +9,7 @@ import (
 
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
+	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
 type Req struct {
@@ -29,7 +30,14 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		links     []*models.Link
 	)
 
-	err := json.NewDecoder(r.Body).Decode(&originals)
+	token := r.Context().Value(Token).(string)
+	userID, err := userid.GetUserID(token)
+
+	if err != nil {
+		zap.L().Info("token is not found")
+	}
+
+	err = json.NewDecoder(r.Body).Decode(&originals)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -45,6 +53,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		link := &models.Link{
 			Short:    key,
 			Original: val.URL,
+			UserID:   userID,
 		}
 
 		shorts = append(shorts, resp)

@@ -11,12 +11,20 @@ import (
 
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
+	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
 func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	var status = http.StatusCreated
+
+	token := r.Context().Value(Token).(string)
+
+	userID, err := userid.GetUserID(token)
+	if err != nil {
+		zap.L().Info("token is not found")
+	}
 
 	responseData, err := io.ReadAll(r.Body)
 
@@ -32,6 +40,7 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	link := &models.Link{
 		Short:    keygen.GenerateKey(),
 		Original: string(responseData),
+		UserID:   userID,
 	}
 
 	if err = a.Storage.Insert(link); err != nil {
