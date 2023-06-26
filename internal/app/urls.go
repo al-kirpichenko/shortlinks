@@ -40,7 +40,7 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(userURLs) == 0 {
+	if len(userURLs) == 0 || userID == "" {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}

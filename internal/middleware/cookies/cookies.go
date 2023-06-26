@@ -1,7 +1,6 @@
 package cookies
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -29,7 +28,6 @@ func Cookies(h http.Handler) http.Handler {
 			setCookie(w)
 		}
 
-		//ctx := context.WithValue(r.Context(), app.Token, token.Value)
 		h.ServeHTTP(w, r)
 
 	})
@@ -48,10 +46,9 @@ func setCookie(w http.ResponseWriter) {
 		Name:     "token",
 		Value:    cookieString,
 		MaxAge:   10800,
+		Path:     "/",
 		HttpOnly: true,
 	}
-
-	log.Println(newCookie.String())
 
 	http.SetCookie(w, newCookie)
 }
