@@ -22,7 +22,7 @@ func NewLinkStorage(db *pg.PG) *Link {
 }
 
 func (l *Link) CreateTable() error {
-	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255), short CHAR (20) UNIQUE, original CHAR (255) UNIQUE );"); err != nil {
+	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255) NULL, short CHAR (20) UNIQUE, original CHAR (255) UNIQUE );"); err != nil {
 		return err
 	}
 	return nil
