@@ -28,13 +28,25 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		originals []Req
 		shorts    []Resp
 		links     []*models.Link
+		userID    string
 	)
 
-	token := r.Context().Value(Token).(string)
-	userID, err := userid.GetUserID(token)
+	//token := r.Context().Value(Token).(string)
+	//userID, err := userid.GetUserID(token)
+	//
+	//if err != nil {
+	//	zap.L().Info("token is not found")
+	//}
+
+	cook, err := r.Cookie("token")
 
 	if err != nil {
-		zap.L().Info("token is not found")
+		userID = ""
+	} else {
+		userID, err = userid.GetUserID(cook.String())
+		if err != nil {
+			userID = ""
+		}
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&originals)

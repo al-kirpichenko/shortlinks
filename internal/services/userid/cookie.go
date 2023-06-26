@@ -29,3 +29,24 @@ func GetUserID(tokenString string) (string, error) {
 
 	return claims.UserID, nil
 }
+
+func ValidationToken(tokenString string) bool {
+
+	claims := &jwtstringbuilder.Claims{}
+	token, err := jwt.ParseWithClaims(tokenString, claims,
+		func(t *jwt.Token) (interface{}, error) {
+			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
+			}
+			return []byte(jwtstringbuilder.SecretKey), nil
+		})
+	if err != nil {
+		return false
+	}
+
+	if !token.Valid {
+		return false
+	}
+
+	return true
+}

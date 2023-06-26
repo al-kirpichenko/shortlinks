@@ -15,19 +15,22 @@ import (
 func Cookies(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 		token, err := r.Cookie("token")
 
-		tokenStr := token.String()
 		if err != nil {
 			zap.L().Error("cookies not found")
 			setCookie(w)
-		}
-		if _, err := userid.GetUserID(tokenStr); err != nil {
-			zap.L().Error("cookie is not valid")
+		} else if _, err := userid.GetUserID(token.String()); err != nil {
+			zap.L().Error("user id not found")
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		} else if !userid.ValidationToken(token.String()) {
+			zap.L().Error("token is not valid")
 			setCookie(w)
 		}
 
-		ctx := context.WithValue(r.Context(), app.Token, tokenStr)
+		ctx := context.WithValue(r.Context(), app.Token, token.String())
 		h.ServeHTTP(w, r.WithContext(ctx))
 
 	})

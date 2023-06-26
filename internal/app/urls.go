@@ -16,14 +16,26 @@ type RespURLs struct {
 func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	var links []RespURLs
+	var userID string
 
-	token := r.Context().Value(Token).(string)
+	cook, err := r.Cookie("token")
 
-	userID, err := userid.GetUserID(token)
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		return
+		userID = ""
+	} else {
+		userID, err = userid.GetUserID(cook.String())
+		if err != nil {
+			userID = ""
+		}
 	}
+
+	//token := r.Context().Value(Token).(string)
+	//
+	//userID, err := userid.GetUserID(token)
+	//if err != nil {
+	//	w.WriteHeader(http.StatusUnauthorized)
+	//	return
+	//}
 
 	userURLs, err := a.Storage.GetAllByUserID(userID)
 

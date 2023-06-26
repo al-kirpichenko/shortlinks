@@ -17,13 +17,20 @@ import (
 
 func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
-	var status = http.StatusCreated
+	var (
+		status = http.StatusCreated
+		userID string
+	)
 
-	token := r.Context().Value(Token).(string)
+	cook, err := r.Cookie("token")
 
-	userID, err := userid.GetUserID(token)
 	if err != nil {
-		zap.L().Info("token is not found")
+		userID = ""
+	} else {
+		userID, err = userid.GetUserID(cook.String())
+		if err != nil {
+			userID = ""
+		}
 	}
 
 	responseData, err := io.ReadAll(r.Body)

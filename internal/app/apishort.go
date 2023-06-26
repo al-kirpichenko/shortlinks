@@ -25,12 +25,24 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	var req Request
 	var status = http.StatusCreated
+	var userID string
 
-	token := r.Context().Value(Token).(string)
+	//token := r.Context().Value(Token).(string)
+	//
+	//userID, err := userid.GetUserID(token)
+	//if err != nil {
+	//	zap.L().Info("token is not found")
+	//}
 
-	userID, err := userid.GetUserID(token)
+	cook, err := r.Cookie("token")
+
 	if err != nil {
-		zap.L().Info("token is not found")
+		userID = ""
+	} else {
+		userID, err = userid.GetUserID(cook.String())
+		if err != nil {
+			userID = ""
+		}
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&req)
