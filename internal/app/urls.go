@@ -39,12 +39,12 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 	userURLs, err := a.Storage.GetAllByUserID(userID)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusNoContent)
+		http.Error(w, "ошибка получения урл", http.StatusNoContent)
 		return
 	}
 
 	if len(userURLs) == 0 || userID == "" {
-		http.Error(w, err.Error(), http.StatusNoContent)
+		http.Error(w, "урл нет или юзер не найден", http.StatusNoContent)
 		return
 	}
 
