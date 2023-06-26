@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
@@ -46,8 +47,8 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	for _, val := range userURLs {
 		resp := RespURLs{
-			Short:    fmt.Sprintf(a.cfg.ResultURL+"/%s", val.Short),
-			Original: val.Original,
+			Short:    strings.TrimSpace(fmt.Sprintf(a.cfg.ResultURL+"/%s", val.Short)),
+			Original: strings.TrimSpace(val.Original),
 		}
 
 		links = append(links, resp)
