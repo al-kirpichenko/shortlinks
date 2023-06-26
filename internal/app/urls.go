@@ -25,6 +25,7 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		userID = ""
 		log.Println("нет куки!")
+		log.Println(err)
 	} else {
 		userID, err = userid.GetUserID(cook.Value)
 		if err != nil {
