@@ -35,6 +35,8 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	userURLs, err := a.Storage.GetAllByUserID(userID)
 
+	log.Println(userURLs)
+
 	if err != nil {
 		w.WriteHeader(http.StatusNoContent)
 		return
