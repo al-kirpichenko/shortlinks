@@ -1,46 +1,54 @@
 package cookies
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
+	"golang.org/x/net/context"
 
 	"github.com/al-kirpichenko/shortlinks/internal/services/jwtstringbuilder"
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
+type ContextKey string
+
+const ContextUserKey ContextKey = "token"
+
 func Cookies(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
+		userID := uuid.New().String()
+
+		cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
+
+		if err != nil {
+			zap.L().Error("Don't create cookie string")
+		}
+
 		token, err := r.Cookie("token")
 
 		if err != nil {
-			zap.L().Error("cookies not found")
-			setCookie(w)
+			log.Println("нет куки")
+			setCookie(w, cookieString)
 		} else if _, err := userid.GetUserID(token.Value); err != nil {
 			zap.L().Error("user id not found")
 			w.WriteHeader(http.StatusUnauthorized)
 			return
 		} else if !userid.ValidationToken(token.Value) {
 			zap.L().Error("token is not valid")
-			setCookie(w)
+			setCookie(w, cookieString)
 		}
 
-		h.ServeHTTP(w, r)
+		ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
+		h.ServeHTTP(w, r.WithContext(ctx))
 
 	})
 }
 
-func setCookie(w http.ResponseWriter) {
-	userID := uuid.New().String()
-
-	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
-
-	if err != nil {
-		zap.L().Error("Don't create cookie string")
-	}
+func setCookie(w http.ResponseWriter, cookieString string) {
 
 	newCookie := &http.Cookie{
 		Name:     "token",

@@ -4,11 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 
 	"go.uber.org/zap"
 
+	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
@@ -22,16 +24,15 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		userID string
 	)
 
-	cook, err := r.Cookie("token")
+	token := r.Context().Value(cookies.ContextUserKey).(string)
 
+	userID, err := userid.GetUserID(token)
 	if err != nil {
 		userID = ""
-	} else {
-		userID, err = userid.GetUserID(cook.Value)
-		if err != nil {
-			userID = ""
-		}
 	}
+
+	log.Println("id: ")
+	log.Println(userID)
 
 	responseData, err := io.ReadAll(r.Body)
 
