@@ -17,16 +17,17 @@ func Router(app *app.App) http.Handler {
 
 	router.Use(logger.Logger)
 	router.Use(middleware.Gzip)
+	router.Use(cookies.Cookies)
 
-	allGroup := router.Group(nil)
-	allGroup.Use(cookies.Cookies)
-	allGroup.Get("/api/user/urls", app.APIGetUserURLs)
+	//allGroup := router.Group(nil)
+	//allGroup.Use(cookies.Cookies)
+	//allGroup.Get("/api/user/urls", app.APIGetUserURLs)
 
-	router.Get("/{id}", app.GetOriginalURL)
 	router.Get("/ping", app.Ping)
 	router.Post("/", app.GetShortURL)
 	router.Post("/api/shorten", app.APIGetShortURL)
 	router.Post("/api/shorten/batch", app.APIBatch)
+	router.Get("/api/user/urls", app.APIGetUserURLs)
 
 	return router
 
