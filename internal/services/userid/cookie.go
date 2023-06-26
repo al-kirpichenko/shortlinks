@@ -2,17 +2,18 @@ package userid
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/pkg/errors"
 
 	"github.com/al-kirpichenko/shortlinks/internal/services/jwtstringbuilder"
 )
 
 func GetUserID(tokenString string) (string, error) {
 	// создаём экземпляр структуры с утверждениями
+
 	claims := &jwtstringbuilder.Claims{}
-	token, err := jwt.ParseWithClaims(tokenString, claims,
+	_, err := jwt.ParseWithClaims(tokenString, claims,
 		func(t *jwt.Token) (interface{}, error) {
 			if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", t.Header["alg"])
@@ -20,13 +21,9 @@ func GetUserID(tokenString string) (string, error) {
 			return []byte(jwtstringbuilder.SecretKey), nil
 		})
 	if err != nil {
+		log.Println(err)
 		return "", err
 	}
-
-	if !token.Valid {
-		return "", errors.New("Token is not valid")
-	}
-
 	return claims.UserID, nil
 }
 

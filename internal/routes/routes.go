@@ -23,6 +23,7 @@ func Router(app *app.App) http.Handler {
 	//allGroup.Use(cookies.Cookies)
 	//allGroup.Get("/api/user/urls", app.APIGetUserURLs)
 
+	router.Get("/{id}", app.GetOriginalURL)
 	router.Get("/ping", app.Ping)
 	router.Post("/", app.GetShortURL)
 	router.Post("/api/shorten", app.APIGetShortURL)
