@@ -26,7 +26,7 @@ func (l *Link) CreateTable() error {
 	//	return err
 	//}
 
-	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255) NULL, short CHAR (20) UNIQUE, original CHAR (255) UNIQUE, deleted BOOLEAN );"); err != nil {
+	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255) NULL, short CHAR (20) UNIQUE, original CHAR (255) UNIQUE, deleted BOOLEAN DEFAULT FALSE );"); err != nil {
 		return err
 	}
 	return nil
@@ -131,7 +131,12 @@ func (l *Link) GetAllByUserID(userID string) ([]models.Link, error) {
 
 func (l *Link) DelURL(shortURL string, userid string) error {
 
-	_, err := l.Store.DB.Query("UPDATE links SET deleted=true WHERE short=$1 AND userid=$2", shortURL, userid)
+	row, err := l.Store.DB.Query("UPDATE links SET deleted=true WHERE short=$1 AND userid=$2", shortURL, userid)
+	if err != nil {
+		return err
+	}
+	defer row.Close()
+	err = row.Err()
 	if err != nil {
 		return err
 	}
