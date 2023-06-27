@@ -38,10 +38,10 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//if len(userURLs) == 0 || userID == "" {
-	//	http.Error(w, "урл нет или юзер не найден", http.StatusNoContent)
-	//	return
-	//}
+	if len(userURLs) == 0 || userID == "" {
+		http.Error(w, "урл нет или юзер не найден", http.StatusNoContent)
+		return
+	}
 
 	for _, val := range userURLs {
 		resp := RespURLs{
