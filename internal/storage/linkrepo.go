@@ -126,16 +126,39 @@ func (l *Link) GetAllByUserID(userID string) ([]models.Link, error) {
 	return links, nil
 }
 
-func (l *Link) DelURL(shortURL string, userid string) error {
+//func (l *Link) DelURL(shortURL string, userid string) error {
+//
+//	row, err := l.Store.DB.Query("UPDATE links SET deleted=true WHERE short=$1 AND userid=$2", shortURL, userid)
+//	if err != nil {
+//		return err
+//	}
+//	defer row.Close()
+//	err = row.Err()
+//	if err != nil {
+//		return err
+//	}
+//	return nil
+//}
 
-	row, err := l.Store.DB.Query("UPDATE links SET deleted=true WHERE short=$1 AND userid=$2", shortURL, userid)
+func (l *Link) DelURL(shortURLs []string, userid string) error {
+	tx, err := l.Store.DB.Begin()
 	if err != nil {
 		return err
 	}
-	defer row.Close()
-	err = row.Err()
+	defer tx.Rollback()
+
+	stmt, err := tx.Prepare(
+		"UPDATE links SET deleted=true WHERE short=$1 AND userid=$2")
 	if err != nil {
 		return err
 	}
-	return nil
+	defer stmt.Close()
+
+	for _, v := range shortURLs {
+		_, err := stmt.Exec(v, userid)
+		if err != nil {
+			return err
+		}
+	}
+	return tx.Commit()
 }

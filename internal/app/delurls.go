@@ -29,15 +29,13 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	var wg sync.WaitGroup
 
-	for _, url := range shorts {
-		wg.Add(1)
-		go func(url string, userID string) {
-			if err := a.Storage.DelURL(url, userID); err != nil {
-				log.Println(url + " не был удален!")
-			}
-			wg.Done()
-		}(url, userID)
-	}
+	wg.Add(1)
+	go func(urls []string, userID string) {
+		if err := a.Storage.DelURL(urls, userID); err != nil {
+			log.Println(err)
+		}
+		wg.Done()
+	}(shorts, userID)
 	wg.Wait()
 
 	w.WriteHeader(http.StatusAccepted)
