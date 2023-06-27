@@ -63,3 +63,7 @@ func (s *InMemoryStorage) GetShort(original string) (*models.Link, error) {
 func (s *InMemoryStorage) GetAllByUserID(userID string) ([]models.Link, error) {
 	return nil, nil
 }
+
+func (s *InMemoryStorage) DelURL(shortURL string, userid string) error {
+	return nil
+}

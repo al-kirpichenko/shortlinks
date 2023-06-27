@@ -22,7 +22,11 @@ func NewLinkStorage(db *pg.PG) *Link {
 }
 
 func (l *Link) CreateTable() error {
-	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255) NULL, short CHAR (20) UNIQUE, original CHAR (255) UNIQUE );"); err != nil {
+	//if _, err := l.Store.DB.Exec("DROP table links"); err != nil {
+	//	return err
+	//}
+
+	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255) NULL, short CHAR (20) UNIQUE, original CHAR (255) UNIQUE, deleted BOOLEAN );"); err != nil {
 		return err
 	}
 	return nil
@@ -77,7 +81,7 @@ func (l *Link) GetOriginal(short string) (*models.Link, error) {
 	link := &models.Link{
 		Short: short,
 	}
-	if err := l.Store.DB.QueryRow("SELECT original FROM links WHERE short = $1", link.Short).Scan(&link.Original); err != nil {
+	if err := l.Store.DB.QueryRow("SELECT original, deleted FROM links WHERE short = $1", link.Short).Scan(&link.Original, &link.Deleted); err != nil {
 		zap.L().Error("Don't get original URL", zap.Error(err))
 		return link, err
 	}
@@ -123,4 +127,13 @@ func (l *Link) GetAllByUserID(userID string) ([]models.Link, error) {
 	}
 
 	return links, nil
+}
+
+func (l *Link) DelURL(shortURL string, userid string) error {
+
+	_, err := l.Store.DB.Query("UPDATE links SET deleted=true WHERE short=$1 AND userid=$2", shortURL, userid)
+	if err != nil {
+		return err
+	}
+	return nil
 }

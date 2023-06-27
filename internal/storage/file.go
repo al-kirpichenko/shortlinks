@@ -88,3 +88,7 @@ func (fs *FileStorage) GetShort(original string) (*models.Link, error) {
 func (fs *FileStorage) GetAllByUserID(userID string) ([]models.Link, error) {
 	return nil, nil
 }
+
+func (fs *FileStorage) DelURL(shortURL string, userid string) error {
+	return nil
+}
