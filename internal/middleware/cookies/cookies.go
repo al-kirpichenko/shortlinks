@@ -16,6 +16,16 @@ type ContextKey string
 
 const ContextUserKey ContextKey = "token"
 
+func createCookieString() (string, error) {
+	userID := uuid.New().String()
+	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
+	if err != nil {
+		log.Println("Don't create cookie string")
+		return "", err
+	}
+	return cookieString, nil
+}
+
 func Cookies(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -25,26 +35,24 @@ func Cookies(h http.Handler) http.Handler {
 		var cookieString string
 		if err != nil {
 			log.Println("нет куки")
-			userID := uuid.New().String()
 
-			cookieString, err = jwtstringbuilder.BuildJWTSting(userID)
+			cookieString, err = createCookieString()
 
 			if err != nil {
-				zap.L().Error("Don't create cookie string")
+				log.Println("Don't create cookie string")
 			}
 			setCookie(w, cookieString)
 		} else if _, err := userid.GetUserID(token.Value); err != nil {
+
 			http.Error(w, "user id not found", http.StatusUnauthorized)
 
 			return
 		} else if !userid.ValidationToken(token.Value) {
 			zap.L().Error("token is not valid")
-			userID := uuid.New().String()
-
-			cookieString, err = jwtstringbuilder.BuildJWTSting(userID)
+			cookieString, err = createCookieString()
 
 			if err != nil {
-				zap.L().Error("Don't create cookie string")
+				log.Println("Don't create cookie string")
 			}
 			setCookie(w, cookieString)
 		} else {
