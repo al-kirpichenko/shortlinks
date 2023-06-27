@@ -7,6 +7,7 @@ import (
 
 	"go.uber.org/zap"
 
+	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
@@ -31,22 +32,11 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		userID    string
 	)
 
-	//token := r.Context().Value(Token).(string)
-	//userID, err := userid.GetUserID(token)
-	//
-	//if err != nil {
-	//	zap.L().Info("token is not found")
-	//}
+	token := r.Context().Value(cookies.ContextUserKey).(string)
 
-	cook, err := r.Cookie("token")
-
+	userID, err := userid.GetUserID(token)
 	if err != nil {
 		userID = ""
-	} else {
-		userID, err = userid.GetUserID(cook.String())
-		if err != nil {
-			userID = ""
-		}
 	}
 
 	err = json.NewDecoder(r.Body).Decode(&originals)

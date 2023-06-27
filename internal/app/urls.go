@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
@@ -18,20 +19,14 @@ type RespURLs struct {
 func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	var links []RespURLs
-	var userID string
 
-	cook, err := r.Cookie("token")
+	token := r.Context().Value(cookies.ContextUserKey).(string)
 
+	log.Println(token)
+
+	userID, err := userid.GetUserID(token)
 	if err != nil {
 		userID = ""
-		log.Println("нет куки!")
-		log.Println(err)
-	} else {
-		userID, err = userid.GetUserID(cook.Value)
-		if err != nil {
-			log.Println("нет id в куке!")
-			userID = ""
-		}
 	}
 
 	log.Println(userID)
@@ -43,10 +38,10 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if len(userURLs) == 0 || userID == "" {
-		http.Error(w, "урл нет или юзер не найден", http.StatusNoContent)
-		return
-	}
+	//if len(userURLs) == 0 || userID == "" {
+	//	http.Error(w, "урл нет или юзер не найден", http.StatusNoContent)
+	//	return
+	//}
 
 	for _, val := range userURLs {
 		resp := RespURLs{
@@ -55,6 +50,7 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 		}
 
 		links = append(links, resp)
+		log.Println(resp)
 	}
 
 	response, err := json.Marshal(links)

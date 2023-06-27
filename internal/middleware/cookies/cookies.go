@@ -20,26 +20,35 @@ func Cookies(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		userID := uuid.New().String()
-
-		cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
-
-		if err != nil {
-			zap.L().Error("Don't create cookie string")
-		}
-
 		token, err := r.Cookie("token")
 
+		var cookieString string
 		if err != nil {
 			log.Println("нет куки")
+			userID := uuid.New().String()
+
+			cookieString, err = jwtstringbuilder.BuildJWTSting(userID)
+
+			if err != nil {
+				zap.L().Error("Don't create cookie string")
+			}
 			setCookie(w, cookieString)
 		} else if _, err := userid.GetUserID(token.Value); err != nil {
-			zap.L().Error("user id not found")
-			w.WriteHeader(http.StatusUnauthorized)
+			http.Error(w, "user id not found", http.StatusUnauthorized)
+
 			return
 		} else if !userid.ValidationToken(token.Value) {
 			zap.L().Error("token is not valid")
+			userID := uuid.New().String()
+
+			cookieString, err = jwtstringbuilder.BuildJWTSting(userID)
+
+			if err != nil {
+				zap.L().Error("Don't create cookie string")
+			}
 			setCookie(w, cookieString)
+		} else {
+			cookieString = token.Value
 		}
 
 		ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
