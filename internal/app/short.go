@@ -1,15 +1,22 @@
 package app
 
 import (
+	"errors"
 	"fmt"
+	"io"
+	"net/http"
+	"strings"
+
+	"go.uber.org/zap"
+
+	"github.com/al-kirpichenko/shortlinks/internal/models"
 	"github.com/al-kirpichenko/shortlinks/internal/services/keygen"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
-	"io"
-	"log"
-	"net/http"
 )
 
 func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
+
+	var status = http.StatusCreated
 
 	responseData, err := io.ReadAll(r.Body)
 
@@ -21,31 +28,35 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Empty POST request body!", http.StatusBadRequest)
 		return
 	}
-	url := string(responseData)
 
-	id := keygen.KeyGenerate()
-
-	a.Storage.SetURL(id, url)
-
-	fileStorage := storage.NewFileStorage()
-
-	fileStorage.Short = id
-	fileStorage.Original = url
-
-	err = storage.SaveToFile(fileStorage, a.cfg.FilePATH)
-
-	if err != nil {
-		log.Println(err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	link := &models.Link{
+		Short:    keygen.GenerateKey(),
+		Original: string(responseData),
 	}
 
-	response := fmt.Sprintf(a.cfg.ResultURL+"/%s", id)
+	if err = a.Storage.Insert(link); err != nil {
+		if errors.Is(err, storage.ErrConflict) {
+			link, err = a.Storage.GetShort(link.Original)
+			if err != nil {
+				zap.L().Error("Don't get short URL", zap.Error(err))
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			status = http.StatusConflict
+		} else {
+			zap.L().Error("Don't insert URL", zap.Error(err))
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	}
+
+	response := strings.TrimSpace(fmt.Sprintf(a.cfg.ResultURL+"/%s", link.Short))
 	w.Header().Set("Content-Type", "text/plain")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(status)
 
 	_, err = io.WriteString(w, response)
 	if err != nil {
+		zap.L().Error("Don't write response", zap.Error(err))
 		return
 	}
 }

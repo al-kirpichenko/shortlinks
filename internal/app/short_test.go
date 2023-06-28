@@ -1,12 +1,14 @@
 package app
 
 import (
-	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 )
 
 func Test_GetShortURL(t *testing.T) {
@@ -49,6 +51,7 @@ func Test_GetShortURL(t *testing.T) {
 	}
 
 	app := NewApp(conf)
+	app.ConfigureStorage()
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {

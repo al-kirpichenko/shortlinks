@@ -9,7 +9,7 @@ const (
 	alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
-func KeyGenerate() string {
+func GenerateKey() string {
 	number := rand.Uint64()
 	length := len(alphabet)
 	var encodedBuilder strings.Builder
