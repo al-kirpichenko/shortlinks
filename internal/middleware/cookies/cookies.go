@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 
+	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 	"github.com/al-kirpichenko/shortlinks/internal/services/jwtstringbuilder"
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
@@ -33,32 +34,46 @@ func Cookies(h http.Handler) http.Handler {
 		token, err := r.Cookie("token")
 
 		var cookieString string
+
+		//как из этого сделать switch я не понял(
+
 		if err != nil {
-			log.Println("нет куки")
 
 			cookieString, err = createCookieString()
 
 			if err != nil {
-				log.Println("Don't create cookie string")
+				logger.ZapLogger.Error("Don't create cookie string", zap.Error(err))
 			}
 			setCookie(w, cookieString)
-		} else if _, err := userid.GetUserID(token.Value); err != nil {
-
-			http.Error(w, "user id not found", http.StatusUnauthorized)
+			ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
+			h.ServeHTTP(w, r.WithContext(ctx))
 
 			return
-		} else if !userid.ValidationToken(token.Value) {
-			zap.L().Error("token is not valid")
+
+		}
+
+		if _, err = userid.GetUserID(token.Value); err != nil {
+
+			http.Error(w, "user id not found", http.StatusUnauthorized)
+			return
+
+		}
+
+		if !userid.ValidationToken(token.Value) {
+
+			logger.ZapLogger.Error("token is not valid")
 			cookieString, err = createCookieString()
 
 			if err != nil {
-				log.Println("Don't create cookie string")
+				logger.ZapLogger.Error("Don't create cookie string")
 			}
 			setCookie(w, cookieString)
-		} else {
-			cookieString = token.Value
+			ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
+			h.ServeHTTP(w, r.WithContext(ctx))
+			return
 		}
 
+		cookieString = token.Value
 		ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
 		h.ServeHTTP(w, r.WithContext(ctx))
 
