@@ -31,11 +31,9 @@ func Cookies(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		token, err := r.Cookie("token")
-
 		var cookieString string
 
-		//как из этого сделать switch я не понял(
+		token, err := r.Cookie("token")
 
 		if err != nil {
 
@@ -44,17 +42,13 @@ func Cookies(h http.Handler) http.Handler {
 			if err != nil {
 				logger.ZapLogger.Error("Don't create cookie string", zap.Error(err))
 			}
-			setCookie(w, cookieString)
-			ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
-			h.ServeHTTP(w, r.WithContext(ctx))
-
-			return
+			token = setCookie(w, cookieString)
 
 		}
 
 		if _, err = userid.GetUserID(token.Value); err != nil {
 
-			http.Error(w, "user id not found", http.StatusUnauthorized)
+			http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
 			return
 
 		}
@@ -68,19 +62,17 @@ func Cookies(h http.Handler) http.Handler {
 				logger.ZapLogger.Error("Don't create cookie string")
 			}
 			setCookie(w, cookieString)
-			ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
-			h.ServeHTTP(w, r.WithContext(ctx))
-			return
+			token = setCookie(w, cookieString)
+
 		}
 
-		cookieString = token.Value
-		ctx := context.WithValue(r.Context(), ContextUserKey, cookieString)
+		ctx := context.WithValue(r.Context(), ContextUserKey, token.Value)
 		h.ServeHTTP(w, r.WithContext(ctx))
 
 	})
 }
 
-func setCookie(w http.ResponseWriter, cookieString string) {
+func setCookie(w http.ResponseWriter, cookieString string) *http.Cookie {
 
 	newCookie := &http.Cookie{
 		Name:     "token",
@@ -91,4 +83,5 @@ func setCookie(w http.ResponseWriter, cookieString string) {
 	}
 
 	http.SetCookie(w, newCookie)
+	return newCookie
 }
