@@ -17,7 +17,7 @@ type ContextKey string
 
 const ContextUserKey ContextKey = "token"
 
-func createCookieString() (string, error) {
+func createToken() (string, error) {
 
 	userID := uuid.New().String()
 	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
@@ -33,18 +33,18 @@ func Cookies(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		var cookieString string
+		var token string
 
 		userCookie, err := r.Cookie("token")
 
 		if err != nil {
 
-			cookieString, err = createCookieString()
+			token, err = createToken()
 
 			if err != nil {
 				logger.ZapLogger.Error("Don't create cookie string", zap.Error(err))
 			}
-			userCookie = setCookie(w, cookieString)
+			userCookie = setCookie(w, token)
 
 		}
 
@@ -58,13 +58,13 @@ func Cookies(h http.Handler) http.Handler {
 		if !userid.ValidationToken(userCookie.Value) {
 
 			logger.ZapLogger.Error("userCookie is not valid")
-			cookieString, err = createCookieString()
+			token, err = createToken()
 
 			if err != nil {
 				logger.ZapLogger.Error("Don't create cookie string")
 			}
-			setCookie(w, cookieString)
-			userCookie = setCookie(w, cookieString)
+			setCookie(w, token)
+			userCookie = setCookie(w, token)
 
 		}
 
@@ -74,11 +74,11 @@ func Cookies(h http.Handler) http.Handler {
 	})
 }
 
-func setCookie(w http.ResponseWriter, cookieString string) *http.Cookie {
+func setCookie(w http.ResponseWriter, token string) *http.Cookie {
 
 	newCookie := &http.Cookie{
 		Name:     "token",
-		Value:    cookieString,
+		Value:    token,
 		MaxAge:   10800,
 		Path:     "/",
 		HttpOnly: true,
