@@ -1,7 +1,6 @@
 package cookies
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -22,7 +21,6 @@ func createToken() (string, error) {
 	userID := uuid.New().String()
 	token, err := jwtstringbuilder.BuildJWTSting(userID)
 	if err != nil {
-		log.Println("Don't create cookie string")
 		return "", err
 	}
 	return token, nil
@@ -42,7 +40,7 @@ func Cookies(h http.Handler) http.Handler {
 			token, err = createToken()
 
 			if err != nil {
-				logger.ZapLogger.Error("Don't create cookie string", zap.Error(err))
+				logger.ZapLogger.Error("Don't create token", zap.Error(err))
 			}
 			userCookie = setCookie(w, token)
 
@@ -57,11 +55,11 @@ func Cookies(h http.Handler) http.Handler {
 
 		if !userid.ValidationToken(userCookie.Value) {
 
-			logger.ZapLogger.Error("userCookie is not valid")
+			logger.ZapLogger.Error("token is not valid")
 			token, err = createToken()
 
 			if err != nil {
-				logger.ZapLogger.Error("Don't create cookie string")
+				logger.ZapLogger.Error("Don't create token")
 			}
 			setCookie(w, token)
 			userCookie = setCookie(w, token)
