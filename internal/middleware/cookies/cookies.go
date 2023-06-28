@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 	"golang.org/x/net/context"
 
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
@@ -40,7 +39,8 @@ func Cookies(h http.Handler) http.Handler {
 			token, err = createToken()
 
 			if err != nil {
-				logger.ZapLogger.Error("Don't create token", zap.Error(err))
+				http.Error(w, "Try later..", http.StatusInternalServerError)
+				return
 			}
 			userCookie = setCookie(w, token)
 
@@ -59,7 +59,8 @@ func Cookies(h http.Handler) http.Handler {
 			token, err = createToken()
 
 			if err != nil {
-				logger.ZapLogger.Error("Don't create token")
+				http.Error(w, "Try later..", http.StatusInternalServerError)
+				return
 			}
 			setCookie(w, token)
 			userCookie = setCookie(w, token)
