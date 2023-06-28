@@ -35,7 +35,7 @@ func Cookies(h http.Handler) http.Handler {
 
 		var cookieString string
 
-		userCookie, err := r.Cookie("userCookie")
+		userCookie, err := r.Cookie("token")
 
 		if err != nil {
 
