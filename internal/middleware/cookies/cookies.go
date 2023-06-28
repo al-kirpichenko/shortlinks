@@ -20,12 +20,12 @@ const ContextUserKey ContextKey = "token"
 func createToken() (string, error) {
 
 	userID := uuid.New().String()
-	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
+	token, err := jwtstringbuilder.BuildJWTSting(userID)
 	if err != nil {
 		log.Println("Don't create cookie string")
 		return "", err
 	}
-	return cookieString, nil
+	return token, nil
 
 }
 
