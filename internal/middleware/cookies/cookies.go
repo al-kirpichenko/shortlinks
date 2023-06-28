@@ -18,6 +18,7 @@ type ContextKey string
 const ContextUserKey ContextKey = "token"
 
 func createCookieString() (string, error) {
+
 	userID := uuid.New().String()
 	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
 	if err != nil {
@@ -25,6 +26,7 @@ func createCookieString() (string, error) {
 		return "", err
 	}
 	return cookieString, nil
+
 }
 
 func Cookies(h http.Handler) http.Handler {
@@ -33,7 +35,7 @@ func Cookies(h http.Handler) http.Handler {
 
 		var cookieString string
 
-		token, err := r.Cookie("token")
+		userCookie, err := r.Cookie("userCookie")
 
 		if err != nil {
 
@@ -42,31 +44,31 @@ func Cookies(h http.Handler) http.Handler {
 			if err != nil {
 				logger.ZapLogger.Error("Don't create cookie string", zap.Error(err))
 			}
-			token = setCookie(w, cookieString)
+			userCookie = setCookie(w, cookieString)
 
 		}
 
-		if _, err = userid.GetUserID(token.Value); err != nil {
+		if _, err = userid.GetUserID(userCookie.Value); err != nil {
 
 			http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
 			return
 
 		}
 
-		if !userid.ValidationToken(token.Value) {
+		if !userid.ValidationToken(userCookie.Value) {
 
-			logger.ZapLogger.Error("token is not valid")
+			logger.ZapLogger.Error("userCookie is not valid")
 			cookieString, err = createCookieString()
 
 			if err != nil {
 				logger.ZapLogger.Error("Don't create cookie string")
 			}
 			setCookie(w, cookieString)
-			token = setCookie(w, cookieString)
+			userCookie = setCookie(w, cookieString)
 
 		}
 
-		ctx := context.WithValue(r.Context(), ContextUserKey, token.Value)
+		ctx := context.WithValue(r.Context(), ContextUserKey, userCookie.Value)
 		h.ServeHTTP(w, r.WithContext(ctx))
 
 	})
@@ -84,4 +86,5 @@ func setCookie(w http.ResponseWriter, cookieString string) *http.Cookie {
 
 	http.SetCookie(w, newCookie)
 	return newCookie
+
 }
