@@ -2,11 +2,12 @@ package app
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"sync"
+
+	"go.uber.org/zap"
 
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
+	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
@@ -27,16 +28,11 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var wg sync.WaitGroup
-
-	wg.Add(1)
 	go func(urls []string, userID string) {
 		if err := a.Storage.DelURL(urls, userID); err != nil {
-			log.Println(err)
+			logger.ZapLogger.Error("don't delete urls", zap.Error(err))
 		}
-		wg.Done()
 	}(shorts, userID)
-	wg.Wait()
 
 	w.WriteHeader(http.StatusAccepted)
 
