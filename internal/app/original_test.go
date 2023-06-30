@@ -7,8 +7,12 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/google/uuid"
+
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
+	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
 	"github.com/al-kirpichenko/shortlinks/internal/models"
+	"github.com/al-kirpichenko/shortlinks/internal/services/jwtstringbuilder"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/stretchr/testify/assert"
@@ -24,6 +28,13 @@ func Test_GetOriginalURL(t *testing.T) {
 
 	app := NewApp(conf)
 	app.ConfigureStorage()
+
+	userID := uuid.New().String()
+
+	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
+	if err != nil {
+		log.Println("Don't create cookie string")
+	}
 
 	resultURL := "https://yandex.ru"
 
@@ -62,13 +73,15 @@ func Test_GetOriginalURL(t *testing.T) {
 
 			r := httptest.NewRequest(test.method, "http://localhost:8080/"+test.body, nil)
 
+			ctx := context.WithValue(r.Context(), cookies.ContextUserKey, cookieString)
+
 			w := httptest.NewRecorder()
 
 			router := chi.NewRouteContext()
 
 			router.URLParams.Add("id", test.body)
 
-			r = r.WithContext(context.WithValue(r.Context(), chi.RouteCtxKey, router))
+			r = r.WithContext(context.WithValue(ctx, chi.RouteCtxKey, router))
 
 			app.GetOriginalURL(w, r)
 

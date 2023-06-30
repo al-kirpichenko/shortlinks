@@ -1,9 +1,10 @@
 package logger
 
 import (
-	"go.uber.org/zap"
 	"net/http"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 type (
@@ -33,10 +34,10 @@ func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 	r.responseData.status = statusCode // захватываем код статуса
 }
 
-var logger *zap.Logger
+var ZapLogger *zap.Logger
 
 func InitLogger() {
-	logger, _ = zap.NewDevelopment()
+	ZapLogger, _ = zap.NewDevelopment()
 }
 
 func Logger(h http.Handler) http.Handler {
@@ -53,7 +54,7 @@ func Logger(h http.Handler) http.Handler {
 		}
 		h.ServeHTTP(&lw, r) // внедряем реализацию http.ResponseWriter
 
-		logger.Sugar().Infoln(
+		ZapLogger.Sugar().Infoln(
 			"uri", r.RequestURI,
 			"method", r.Method,
 			"status", responseData.status, // получаем перехваченный код статуса ответа

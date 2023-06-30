@@ -18,6 +18,11 @@ func (a *App) GetOriginalURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if link.Deleted {
+		w.WriteHeader(http.StatusGone)
+		return
+	}
+
 	w.Header().Set("Location", link.Original)
 	w.WriteHeader(http.StatusTemporaryRedirect)
 }

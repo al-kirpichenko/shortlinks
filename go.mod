@@ -5,10 +5,14 @@ go 1.20
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/go-chi/chi/v5 v5.0.8
+	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/google/uuid v1.3.0
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v5 v5.3.1
+	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.8.2
 	go.uber.org/zap v1.24.0
+	golang.org/x/net v0.6.0
 )
 
 require (

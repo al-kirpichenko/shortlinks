@@ -1,14 +1,20 @@
 package app
 
 import (
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/net/context"
 
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
+	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
+	"github.com/al-kirpichenko/shortlinks/internal/services/jwtstringbuilder"
 )
 
 func Test_GetShortURL(t *testing.T) {
@@ -53,9 +59,22 @@ func Test_GetShortURL(t *testing.T) {
 	app := NewApp(conf)
 	app.ConfigureStorage()
 
+	userID := uuid.New().String()
+
+	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
+	if err != nil {
+		log.Println("Don't create cookie string")
+	}
+
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
 			r := httptest.NewRequest(test.method, "https://localhost:8080", strings.NewReader(test.body))
+
+			ctx := context.WithValue(r.Context(), cookies.ContextUserKey, cookieString)
+
+			router := chi.NewRouteContext()
+
+			r = r.WithContext(context.WithValue(ctx, chi.RouteCtxKey, router))
 
 			w := httptest.NewRecorder()
 
