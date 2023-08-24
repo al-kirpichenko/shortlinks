@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 
@@ -30,9 +29,6 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		userID = ""
 	}
-
-	log.Println("id: ")
-	log.Println(userID)
 
 	responseData, err := io.ReadAll(r.Body)
 
