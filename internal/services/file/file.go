@@ -10,6 +10,7 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 )
 
+// SaveToFile сохраняет экземпляр *models.Link в файл
 func SaveToFile(link *models.Link, fileName string) error {
 
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
@@ -22,6 +23,7 @@ func SaveToFile(link *models.Link, fileName string) error {
 	return err
 }
 
+// AllSaveToFile сохраняет слайс экземпляров *models.Link в файл
 func AllSaveToFile(links []*models.Link, fileName string) error {
 
 	file, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
@@ -36,6 +38,7 @@ func AllSaveToFile(links []*models.Link, fileName string) error {
 	return err
 }
 
+// LoadFromFile загружает из файла слайс пар сокращенный url[оригинальный url]
 func LoadFromFile(fileName string) (map[string]string, error) {
 
 	file, err := os.OpenFile(fileName, os.O_RDONLY|os.O_CREATE, 0666)

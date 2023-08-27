@@ -22,6 +22,8 @@ type Response struct {
 	Result string `json:"result"`
 }
 
+// APIGetShortURL - принимает в теле запроса JSON-объект (оригинальный url) {"url":"<some_url>"} и возвращает
+// в ответ объект {"result":"<short_url>"} (сокращенный url).
 func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	var req Request
