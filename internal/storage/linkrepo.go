@@ -55,7 +55,7 @@ func (l *Link) InsertLinks(links []*models.Link) error {
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer tx.Rollback() //nolint:errcheck
 
 	stmt, err := tx.Prepare(
 		"INSERT INTO links (short, original, userid) VALUES($1,$2,$3)")
@@ -131,7 +131,7 @@ func (l *Link) DelURL(shortURLs []string, userid string) error {
 	if err != nil {
 		return err
 	}
-	defer tx.Rollback()
+	defer tx.Rollback() //nolint:errcheck
 
 	stmt, err := tx.Prepare(
 		"UPDATE links SET deleted=true WHERE short=$1 AND userid=$2")
