@@ -23,6 +23,22 @@ type Resp struct {
 	Short string `json:"short_url"`
 }
 
+// APIBatch - хендлер, принимающий в теле запроса множество URL для сокращения в формате:
+// [
+//
+//	{
+//	    "correlation_id": "<строковый идентификатор>",
+//	    "original_url": "<URL для сокращения>"
+//	},
+//
+// ]
+// В качестве ответа хендлер должен возвращает данные в формате:
+// [
+// {
+// "correlation_id": "<строковый идентификатор из объекта запроса>",
+// "short_url": "<результирующий сокращённый URL>"
+// },
+// ]
 func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 
 	var (

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 
@@ -17,6 +16,8 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
+// GetShortURL - Эндпоинт с методом POST и путём "/". Сервер принимает в теле запроса строку URL как text/plain и
+// возвращает ответ с кодом 201 и сокращённым URL как text/plain.
 func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 
 	var (
@@ -30,9 +31,6 @@ func (a *App) GetShortURL(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		userID = ""
 	}
-
-	log.Println("id: ")
-	log.Println(userID)
 
 	responseData, err := io.ReadAll(r.Body)
 

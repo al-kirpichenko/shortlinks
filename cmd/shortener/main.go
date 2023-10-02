@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"

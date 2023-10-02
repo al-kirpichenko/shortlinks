@@ -1,3 +1,4 @@
+// Package jwtstringbuilder отвечает за создание токена авторизации
 package jwtstringbuilder
 
 import (

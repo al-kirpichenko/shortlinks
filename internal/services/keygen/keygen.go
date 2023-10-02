@@ -1,3 +1,4 @@
+// Package keygen - генерация уникального короткого url
 package keygen
 
 import (
@@ -9,6 +10,7 @@ const (
 	alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 )
 
+// GenerateKey создает уникальную случайную короткую строку
 func GenerateKey() string {
 	number := rand.Uint64()
 	length := len(alphabet)
