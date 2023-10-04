@@ -1,0 +1,5 @@
+{
+  "staticcheck": [
+    "SA*"
+  ]
+}
