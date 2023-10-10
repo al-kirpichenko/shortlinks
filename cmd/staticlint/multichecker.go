@@ -12,6 +12,8 @@ import (
 	"golang.org/x/tools/go/analysis/passes/shift"
 	"golang.org/x/tools/go/analysis/passes/structtag"
 	"honnef.co/go/tools/staticcheck"
+
+	"github.com/al-kirpichenko/shortlinks/internal/myanalizer"
 )
 
 // Config — имя файла конфигурации.
@@ -28,22 +30,29 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
 	data, err := os.ReadFile(filepath.Join(filepath.Dir(appfile), Config))
 	if err != nil {
 		panic(err)
 	}
+
 	var cfg ConfigData
+
 	if err = json.Unmarshal(data, &cfg); err != nil {
 		panic(err)
 	}
+
 	mychecks := []*analysis.Analyzer{
 
+		myanalizer.OsExitCheckAnalyzer,
 		printf.Analyzer,
 		shadow.Analyzer,
 		structtag.Analyzer,
 		shift.Analyzer,
 	}
+
 	checks := make(map[string]bool)
+
 	for _, v := range cfg.Staticcheck {
 		checks[v] = true
 	}
