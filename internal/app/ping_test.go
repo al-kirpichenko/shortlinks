@@ -1,6 +1,7 @@
 package app
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -11,6 +12,13 @@ import (
 )
 
 func Test_Ping(t *testing.T) {
+
+	const (
+		DBhost     = "localhost"
+		DBuser     = "postgres"
+		DBpassword = "123"
+		DBdbname   = "postgres"
+	)
 
 	type want struct {
 		code int
@@ -29,6 +37,9 @@ func Test_Ping(t *testing.T) {
 	}
 
 	conf := config.NewAppConfig()
+
+	conf.DataBaseString = fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		DBhost, DBuser, DBpassword, DBdbname)
 
 	app := NewApp(conf)
 
