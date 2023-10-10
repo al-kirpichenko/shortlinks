@@ -6,18 +6,22 @@ import (
 	"golang.org/x/tools/go/analysis"
 )
 
+// OsExitCheckAnalyzer анализатор
 var OsExitCheckAnalyzer = &analysis.Analyzer{
 	Name: "osexitcheck",
 	Doc:  "check for os.Exit in main",
 	Run:  run,
 }
 
+// run выполняет проверку на прямой вызов os.Exit() в функции main пакета main
 func run(pass *analysis.Pass) (interface{}, error) {
 
+	// isMainPkg проверка пакета main (bool)
 	isMainPkg := func(x *ast.File) bool {
 		return x.Name.Name == "main"
 	}
 
+	// isMainPkg проверка функции main (bool)
 	isMainFunc := func(x *ast.FuncDecl) bool {
 		return x.Name.Name == "main"
 	}
