@@ -3,7 +3,7 @@
 // все анализаторы класса SA пакета staticcheck.io
 // анализатор, запрещающий использовать прямой вызов os.Exit в функции main пакета main
 
-package staticlint
+package main
 
 import (
 	"encoding/json"
@@ -29,6 +29,7 @@ type ConfigData struct {
 	Staticcheck []string
 }
 
+// start запуск анализатора
 func main() {
 
 	appFile, err := os.Executable()
