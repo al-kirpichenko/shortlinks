@@ -26,12 +26,13 @@ type ConfigData struct {
 
 func main() {
 
-	appfile, err := os.Executable()
+	appFile, err := os.Executable()
+
 	if err != nil {
 		panic(err)
 	}
 
-	data, err := os.ReadFile(filepath.Join(filepath.Dir(appfile), Config))
+	data, err := os.ReadFile(filepath.Join(filepath.Dir(appFile), Config))
 	if err != nil {
 		panic(err)
 	}
@@ -63,8 +64,6 @@ func main() {
 		}
 	}
 	multichecker.Main(
-		printf.Analyzer,
-		shadow.Analyzer,
-		structtag.Analyzer,
+		mychecks...,
 	)
 }
