@@ -16,11 +16,6 @@ var OsExitCheckAnalyzer = &analysis.Analyzer{
 // run выполняет проверку на прямой вызов os.Exit() в функции main пакета main
 func run(pass *analysis.Pass) (interface{}, error) {
 
-	// isMainPkg проверка пакета main (bool)
-	isMainPkg := func(x *ast.File) bool {
-		return x.Name.Name == "main"
-	}
-
 	// isMainPkg проверка функции main (bool)
 	isMainFunc := func(x *ast.FuncDecl) bool {
 		return x.Name.Name == "main"
@@ -43,12 +38,13 @@ func run(pass *analysis.Pass) (interface{}, error) {
 
 	result := false
 	for _, file := range pass.Files {
+
+		if file.Name.Name != "main" {
+			return nil, nil
+		}
 		ast.Inspect(file, func(node ast.Node) bool {
 			switch x := node.(type) {
-			case *ast.File:
-				if !isMainPkg(x) { // если пакет не main - выходим
-					return false
-				}
+
 			case *ast.FuncDecl:
 				if !isMainFunc(x) { // если функция не main - выходим
 					return false
