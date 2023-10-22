@@ -11,6 +11,7 @@ type AppConfig struct {
 	ResultURL      string `env:"BASE_URL"`
 	FilePATH       string `env:"FILE_STORAGE_PATH"`
 	DataBaseString string `env:"DATABASE_DSN"`
+	EnableHTTPS    string `env:"ENABLE_HTTPS"`
 }
 
 func NewAppConfig() *AppConfig {
@@ -21,6 +22,7 @@ func NewAppConfig() *AppConfig {
 	flag.StringVar(&a.ResultURL, "b", "http://localhost:8080", "It's a Result URL")
 	flag.StringVar(&a.FilePATH, "f", "", "It's a FilePATH")
 	flag.StringVar(&a.DataBaseString, "d", "", "it's conn string")
+	flag.StringVar(&a.EnableHTTPS, "s", "", "using HTTPS")
 
 	flag.Parse()
 

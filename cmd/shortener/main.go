@@ -36,5 +36,9 @@ func main() {
 
 	defer newApp.DB.Close()
 
-	log.Fatal(http.ListenAndServe(conf.Host, router))
+	if conf.EnableHTTPS != "" {
+		log.Fatal(http.ListenAndServeTLS(conf.Host, "./certs/cert.pem", "./certs/key.pem", router))
+	} else {
+		log.Fatal(http.ListenAndServe(conf.Host, router))
+	}
 }
