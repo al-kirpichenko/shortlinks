@@ -54,10 +54,13 @@ func main() {
 	// кодируем сертификат и ключ в формате PEM, который
 	// используется для хранения и обмена криптографическими ключами
 	var certPEM bytes.Buffer
-	pem.Encode(&certPEM, &pem.Block{
+	err = pem.Encode(&certPEM, &pem.Block{
 		Type:  "CERTIFICATE",
 		Bytes: certBytes,
 	})
+	if err != nil {
+		return
+	}
 
 	certFile, err := os.OpenFile("cert.pem", os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
@@ -72,10 +75,13 @@ func main() {
 	}
 
 	var privateKeyPEM bytes.Buffer
-	pem.Encode(&privateKeyPEM, &pem.Block{
+	err = pem.Encode(&privateKeyPEM, &pem.Block{
 		Type:  "RSA PRIVATE KEY",
 		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
 	})
+	if err != nil {
+		return
+	}
 
 	keyFile, err := os.OpenFile("key.pem", os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
