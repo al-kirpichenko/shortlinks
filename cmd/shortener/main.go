@@ -76,11 +76,6 @@ func main() {
 	// закрыть открытые файлы
 	fmt.Println("Server Shutdown gracefully")
 
-	//if conf.EnableHTTPS {
-	//	log.Fatal(http.ListenAndServeTLS(conf.Host, "./certs/cert.pem", "./certs/key.pem", router))
-	//} else {
-	//	log.Fatal(http.ListenAndServe(conf.Host, router))
-	//}
 }
 
 func run(srv *http.Server) {
