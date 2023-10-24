@@ -18,6 +18,9 @@ func Router(app *app.App) http.Handler {
 
 	router.Use(logger.Logger)
 	router.Use(middleware.Gzip)
+
+	router.Get("/api/user/urls", app.APIGetUserURLs)
+
 	router.Use(cookies.Cookies)
 
 	router.Get("/{id}", app.GetOriginalURL)
@@ -25,7 +28,6 @@ func Router(app *app.App) http.Handler {
 	router.Post("/", app.GetShortURL)
 	router.Post("/api/shorten", app.APIGetShortURL)
 	router.Post("/api/shorten/batch", app.APIBatch)
-	router.Get("/api/user/urls", app.APIGetUserURLs)
 	router.Delete("/api/user/urls", app.APIDelUserURLs)
 	router.Mount("/debug", middle.Profiler())
 
