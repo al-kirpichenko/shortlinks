@@ -26,6 +26,7 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.WriteHeader(http.StatusAccepted)
 	//go func(urls []string, userID string) {
 	//	if err := a.Storage.DelURL(urls, userID); err != nil {
 	//		logger.ZapLogger.Error("don't delete urls", zap.Error(err))
@@ -37,7 +38,5 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		UserID: userID,
 		URLs:   shorts,
 	})
-
-	w.WriteHeader(http.StatusAccepted)
 
 }
