@@ -2,6 +2,7 @@ package app
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
@@ -10,6 +11,10 @@ import (
 )
 
 func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
+
+	log.Println("TEST DELETE API")
+
+	w.WriteHeader(http.StatusAccepted)
 
 	var shorts []string
 
@@ -33,5 +38,4 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		URLs:   shorts,
 	})
 
-	w.WriteHeader(http.StatusAccepted)
 }
