@@ -26,7 +26,9 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := userid.GetUserID(token)
 	if err != nil {
-		userID = ""
+		http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
+		return
+		//userID = ""
 	}
 
 	userURLs, err := a.Storage.GetAllByUserID(userID)
