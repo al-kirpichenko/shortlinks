@@ -47,7 +47,7 @@ func main() {
 
 	sigint := make(chan os.Signal, 1)
 	// регистрируем перенаправление прерываний
-	signal.Notify(sigint, os.Interrupt, syscall.SIGQUIT)
+	signal.Notify(sigint, os.Interrupt, syscall.SIGQUIT, syscall.SIGTERM)
 
 	// запускаем горутину обработки пойманных прерываний
 	go func() {
