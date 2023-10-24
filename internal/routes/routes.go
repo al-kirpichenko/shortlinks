@@ -18,15 +18,13 @@ func Router(app *app.App) http.Handler {
 
 	router.Use(logger.Logger)
 	router.Use(middleware.Gzip)
-
-	router.Get("/api/user/urls", app.APIGetUserURLs)
-
 	router.Use(cookies.Cookies)
 
 	router.Get("/{id}", app.GetOriginalURL)
 	router.Get("/ping", app.Ping)
 	router.Post("/", app.GetShortURL)
 	router.Post("/api/shorten", app.APIGetShortURL)
+	router.Get("/api/user/urls", app.APIGetUserURLs)
 	router.Post("/api/shorten/batch", app.APIBatch)
 	router.Delete("/api/user/urls", app.APIDelUserURLs)
 	router.Mount("/debug", middle.Profiler())
