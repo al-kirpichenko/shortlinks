@@ -24,14 +24,10 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Context().Value(cookies.ContextUserKey).(string)
 
-	log.Println(token)
-
 	userID, err := userid.GetUserID(token)
 	if err != nil {
 		userID = ""
 	}
-
-	log.Println(userID)
 
 	userURLs, err := a.Storage.GetAllByUserID(userID)
 

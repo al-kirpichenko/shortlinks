@@ -3,17 +3,15 @@ package app
 import (
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/database/pg"
+	"github.com/al-kirpichenko/shortlinks/internal/services/delurls"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
-
-type contextKey string
-
-const Token contextKey = "token"
 
 type App struct {
 	cfg     *config.AppConfig
 	DB      *pg.PG
 	Storage storage.Storage
+	Channel chan *delurls.Task
 }
 
 func NewApp(cfg *config.AppConfig) *App {

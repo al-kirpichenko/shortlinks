@@ -7,6 +7,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 
 	"golang.org/x/net/context"
@@ -15,6 +16,7 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 	"github.com/al-kirpichenko/shortlinks/internal/routes"
+	"github.com/al-kirpichenko/shortlinks/internal/services/delurls"
 )
 
 var (
@@ -37,6 +39,8 @@ func main() {
 
 	newApp.ConfigureStorage()
 
+	newApp.Channel = make(chan *delurls.Task, 1)
+
 	srv := &http.Server{
 		Addr:    conf.Host,
 		Handler: routes.Router(newApp),
@@ -49,10 +53,23 @@ func main() {
 	// регистрируем перенаправление прерываний
 	signal.Notify(sigint, os.Interrupt, syscall.SIGQUIT, syscall.SIGTERM)
 
+	//создаем контекст для корректного завершения удаления ссылок
+	ctx, cancelFunc := context.WithCancel(context.Background())
+
+	queue := delurls.NewQueue(newApp.Channel)
+
+	for i := 0; i < runtime.NumCPU(); i++ {
+		w := delurls.NewWorker(i, queue, delurls.NewDeleter(newApp.Storage))
+		go w.Loop(ctx)
+
+	}
+
 	// запускаем горутину обработки пойманных прерываний
 	go func() {
 		// читаем из канала прерываний
 		<-sigint
+
+		cancelFunc()
 		// получили сигнал os.Interrupt, запускаем процедуру graceful shutdown
 		if err := srv.Shutdown(context.Background()); err != nil {
 			// ошибки закрытия Listener

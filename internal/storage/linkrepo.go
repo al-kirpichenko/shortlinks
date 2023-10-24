@@ -101,7 +101,7 @@ func (l *Link) GetAllByUserID(userID string) ([]models.Link, error) {
 
 	var links []models.Link
 
-	rows, err := l.Store.DB.Query("SELECT original, short, userid FROM links WHERE userid = $1", userID)
+	rows, err := l.Store.DB.Query("SELECT original, short, userid FROM links WHERE userid = $1 AND deleted = false", userID)
 	if err != nil {
 		zap.L().Error("Don't get original URL", zap.Error(err))
 		return nil, err
