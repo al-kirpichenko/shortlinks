@@ -7,7 +7,6 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 
 	"golang.org/x/net/context"
@@ -58,7 +57,7 @@ func main() {
 
 	queue := delurls.NewQueue(newApp.Channel)
 
-	for i := 0; i < runtime.NumCPU(); i++ {
+	for i := 0; i < 5; i++ {
 		w := delurls.NewWorker(i, queue, delurls.NewDeleter(newApp.Storage))
 		go w.Loop(ctx)
 
