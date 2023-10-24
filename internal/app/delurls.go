@@ -35,7 +35,4 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		UserID: userID,
 		URLs:   shorts,
 	})
-
-	return
-
 }
