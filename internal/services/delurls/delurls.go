@@ -53,7 +53,6 @@ func NewWorker(id int, queue *Queue, resizer *Deleter) *Worker {
 
 func (w *Worker) Loop(ctx context.Context) {
 	for {
-		fmt.Printf("старт\n")
 
 		t := w.queue.PopWait()
 
