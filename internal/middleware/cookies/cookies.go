@@ -36,6 +36,10 @@ func Cookies(h http.Handler) http.Handler {
 
 		if err != nil {
 
+			if r.RequestURI == "/api/user/urls" {
+				http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
+				return
+			}
 			token, err = createToken()
 
 			if err != nil {
