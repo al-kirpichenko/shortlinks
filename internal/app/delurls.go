@@ -18,7 +18,11 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 	userID, err := userid.GetUserID(token)
 	if err != nil {
 		userID = ""
+		http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
+		return
 	}
+
+	w.WriteHeader(http.StatusAccepted)
 
 	err = json.NewDecoder(r.Body).Decode(&shorts)
 	if err != nil {
@@ -32,7 +36,5 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		UserID: userID,
 		URLs:   shorts,
 	})
-
-	w.WriteHeader(http.StatusAccepted)
 
 }
