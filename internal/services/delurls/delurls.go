@@ -65,6 +65,7 @@ func (w *Worker) Loop(ctx context.Context) {
 		fmt.Printf("worker #%d deleted urls userID #%s\n", w.id, t.UserID)
 
 		if <-ctx.Done(); true {
+			close(w.queue.ch)
 			fmt.Printf("workers GRACEFULLY\n")
 			return
 		}
