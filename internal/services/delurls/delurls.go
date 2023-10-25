@@ -11,8 +11,7 @@ import (
 )
 
 type Task struct {
-	UserID string
-	URLs   []string
+	URLs []string
 }
 
 // Queue - это очередь задач
@@ -58,13 +57,13 @@ func (w *Worker) Loop(sigint chan os.Signal) {
 
 		t := w.queue.PopWait()
 
-		err := w.deleter.Delete(t.URLs, t.UserID)
+		err := w.deleter.Delete(t.URLs)
 		if err != nil {
 			fmt.Printf("error: %v\n", err)
 			continue
 		}
 
-		fmt.Printf("worker #%d deleted urls userID #%s\n", w.id, t.UserID)
+		fmt.Printf("worker #%d deleted urls\n", w.id)
 
 		if <-sigint; true {
 			shutdown = true
@@ -83,8 +82,8 @@ func NewDeleter(storage storage.Storage) *Deleter {
 	}
 }
 
-func (d *Deleter) Delete(urls []string, userID string) error {
-	if err := d.Storage.DelURL(urls, userID); err != nil {
+func (d *Deleter) Delete(urls []string) error {
+	if err := d.Storage.DelURL(urls); err != nil {
 		logger.ZapLogger.Error("don't delete urls", zap.Error(err))
 		return err
 	}
