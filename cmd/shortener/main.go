@@ -38,7 +38,7 @@ func main() {
 
 	newApp.ConfigureStorage()
 
-	newApp.Channel = make(chan *delurls.Task, 1)
+	newApp.Channel = make(chan *delurls.Task, 1000)
 
 	srv := &http.Server{
 		Addr:    conf.Host,
