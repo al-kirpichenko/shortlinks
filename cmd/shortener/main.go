@@ -7,6 +7,7 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 
 	"golang.org/x/net/context"
@@ -57,8 +58,10 @@ func main() {
 
 	queue := delurls.NewQueue(newApp.Channel)
 
-	w := delurls.NewWorker(1, queue, delurls.NewDeleter(newApp.Storage))
-	go w.Loop(ctx)
+	for i := 0; i < runtime.NumCPU(); i++ {
+		w := delurls.NewWorker(i, queue, delurls.NewDeleter(newApp.Storage))
+		go w.Loop(ctx)
+	}
 
 	// запускаем горутину обработки пойманных прерываний
 	go func() {
