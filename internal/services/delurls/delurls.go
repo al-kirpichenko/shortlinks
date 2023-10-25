@@ -2,9 +2,9 @@ package delurls
 
 import (
 	"fmt"
+	"os"
 
 	"go.uber.org/zap"
-	"golang.org/x/net/context"
 
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
@@ -51,8 +51,10 @@ func NewWorker(id int, queue *Queue, resizer *Deleter) *Worker {
 	return &w
 }
 
-func (w *Worker) Loop(ctx context.Context) {
-	for {
+func (w *Worker) Loop(sigint chan os.Signal) {
+	var shutdown bool
+
+	for !shutdown {
 
 		t := w.queue.PopWait()
 
@@ -64,9 +66,9 @@ func (w *Worker) Loop(ctx context.Context) {
 
 		fmt.Printf("worker #%d deleted urls userID #%s\n", w.id, t.UserID)
 
-		if <-ctx.Done(); true {
+		if <-sigint; true {
+			shutdown = true
 			fmt.Printf("workers GRACEFULLY\n")
-			break
 		}
 	}
 }

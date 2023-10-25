@@ -7,7 +7,6 @@ import (
 	_ "net/http/pprof"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 
 	"golang.org/x/net/context"
@@ -54,21 +53,21 @@ func main() {
 	signal.Notify(sigint, os.Interrupt, syscall.SIGQUIT, syscall.SIGTERM)
 
 	//создаем контекст для корректного завершения удаления ссылок
-	ctx, cancelFunc := context.WithCancel(context.Background())
+	//ctx, cancelFunc := context.WithCancel(context.Background())
 
 	queue := delurls.NewQueue(newApp.Channel)
 
-	for i := 0; i < runtime.NumCPU(); i++ {
-		w := delurls.NewWorker(i, queue, delurls.NewDeleter(newApp.Storage))
-		go w.Loop(ctx)
-	}
+	//for i := 0; i < runtime.NumCPU(); i++ {
+	w := delurls.NewWorker(1, queue, delurls.NewDeleter(newApp.Storage))
+	go w.Loop(sigint)
+	//}
 
 	// запускаем горутину обработки пойманных прерываний
 	go func() {
 		// читаем из канала прерываний
 		<-sigint
 
-		cancelFunc()
+		//cancelFunc()
 		// получили сигнал os.Interrupt, запускаем процедуру graceful shutdown
 		if err := srv.Shutdown(context.Background()); err != nil {
 			// ошибки закрытия Listener
