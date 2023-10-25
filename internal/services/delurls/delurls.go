@@ -70,7 +70,6 @@ func (w *Worker) Loop(ctx context.Context) {
 		}
 	}
 	close(w.queue.ch)
-	return
 }
 
 type Deleter struct {
