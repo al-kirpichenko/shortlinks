@@ -16,8 +16,6 @@ type RespURLs struct {
 	Original string `json:"original_url"`
 }
 
-// APIGetUserURLs в теле запроса принимает список идентификаторов сокращённых URL для асинхронного удаления:
-// формат: ["6qxTVvsy", "RTfd56hn", "Jlfd67ds"]
 func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	var links []RespURLs
