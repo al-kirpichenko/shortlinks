@@ -66,9 +66,11 @@ func (w *Worker) Loop(ctx context.Context) {
 
 		if <-ctx.Done(); true {
 			fmt.Printf("workers GRACEFULLY\n")
-			return
+			break
 		}
 	}
+	close(w.queue.ch)
+	return
 }
 
 type Deleter struct {
