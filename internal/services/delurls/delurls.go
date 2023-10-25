@@ -11,7 +11,8 @@ import (
 )
 
 type Task struct {
-	URLs []string
+	UserID string
+	URLs   []string
 }
 
 // Queue - это очередь задач
