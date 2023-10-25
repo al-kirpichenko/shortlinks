@@ -15,6 +15,11 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	token := r.Context().Value(cookies.ContextUserKey).(string)
 
+	if <-r.Context().Done(); true {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
 	userID, err := userid.GetUserID(token)
 	if err != nil {
 		http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
