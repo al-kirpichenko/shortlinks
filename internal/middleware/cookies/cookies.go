@@ -14,6 +14,7 @@ import (
 // ContextKey тип для токена
 type ContextKey string
 
+// ContextUserKey - токен
 const ContextUserKey ContextKey = "token"
 
 // createToken - создание токена

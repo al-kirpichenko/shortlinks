@@ -24,6 +24,7 @@ func NewApp(cfg *config.AppConfig) *App {
 	}
 }
 
+// ConfigureStorage - конфигуратор хранилища
 func (a *App) ConfigureStorage() {
 
 	switch {
