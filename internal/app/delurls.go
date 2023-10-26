@@ -31,10 +31,16 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	queue := delurls.NewQueue(a.Channel)
+	//queue := delurls.NewQueue(a.Channel)
+	//
+	//queue.Push(&delurls.Task{
+	//	UserID: userID,
+	//	URLs:   shorts,
+	//})
 
-	queue.Push(&delurls.Task{
+	a.Channel <- &delurls.Task{
 		UserID: userID,
 		URLs:   shorts,
-	})
+	}
+
 }

@@ -55,10 +55,8 @@ func main() {
 	//создаем контекст для корректного завершения удаления ссылок
 	//ctx, cancelFunc := context.WithCancel(context.Background())
 
-	queue := delurls.NewQueue(newApp.Channel)
-
 	//for i := 0; i < runtime.NumCPU(); i++ {
-	w := delurls.NewWorker(1, queue, delurls.NewDeleter(newApp.Storage))
+	w := delurls.NewWorker(newApp.Channel, delurls.NewDeleter(newApp.Storage))
 	go w.Loop()
 	//}
 

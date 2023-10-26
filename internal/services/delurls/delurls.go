@@ -15,44 +15,25 @@ type Task struct {
 	URLs   []string
 }
 
-// Queue - это очередь задач
-type Queue struct {
-	ch chan *Task
-}
-
-// NewQueue конструктор
-func NewQueue(channel chan *Task) *Queue {
-	return &Queue{
-		ch: channel,
-	}
-}
-
-// Push добавляет задачу в очередь
-func (q *Queue) Push(t *Task) {
-	q.ch <- t
-}
-
-// PopWait - получение задачи из очереди
-func (q *Queue) PopWait() *Task {
-	// получаем задачу
-	return <-q.ch
-}
-
 // Worker воркер
 type Worker struct {
-	id      int
-	queue   *Queue
+	channel chan *Task
 	deleter *Deleter
 }
 
 // NewWorker конструктор воркеров
-func NewWorker(id int, queue *Queue, resizer *Deleter) *Worker {
+func NewWorker(channel chan *Task, deleter *Deleter) *Worker {
 	w := Worker{
-		id:      id,
-		queue:   queue,
-		deleter: resizer,
+		channel: channel,
+		deleter: deleter,
 	}
 	return &w
+}
+
+// PopWait - получение задачи из очереди
+func (w *Worker) PopWait() *Task {
+	// получаем задачу
+	return <-w.channel
 }
 
 // Loop -
@@ -60,7 +41,7 @@ func (w *Worker) Loop() {
 
 	for {
 
-		t := w.queue.PopWait()
+		t := w.PopWait()
 
 		err := w.deleter.Delete(t.URLs)
 		if err != nil {
@@ -68,7 +49,7 @@ func (w *Worker) Loop() {
 			continue
 		}
 
-		fmt.Printf("worker #%d deleted urls\n", w.id)
+		fmt.Printf("worker deleted urls\n")
 
 	}
 }
