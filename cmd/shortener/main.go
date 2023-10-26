@@ -52,20 +52,14 @@ func main() {
 	// регистрируем перенаправление прерываний
 	signal.Notify(sigint, os.Interrupt, syscall.SIGQUIT, syscall.SIGTERM)
 
-	//создаем контекст для корректного завершения удаления ссылок
-	//ctx, cancelFunc := context.WithCancel(context.Background())
-
-	//for i := 0; i < runtime.NumCPU(); i++ {
 	w := delurls.NewWorker(newApp.Channel, delurls.NewDeleter(newApp.Storage))
 	go w.Loop()
-	//}
 
 	// запускаем горутину обработки пойманных прерываний
 	go func() {
 		// читаем из канала прерываний
 		<-sigint
 
-		//cancelFunc()
 		// получили сигнал os.Interrupt, запускаем процедуру graceful shutdown
 		if err := srv.Shutdown(context.Background()); err != nil {
 			// ошибки закрытия Listener
