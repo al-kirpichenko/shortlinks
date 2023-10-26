@@ -14,6 +14,7 @@ const (
 	defaultBaseURL       = "http://localhost:8080"
 )
 
+// AppConfig - Configuration
 type AppConfig struct {
 	Host           string `env:"SERVER_ADDRESS" json:"server_address"`
 	ResultURL      string `env:"BASE_URL" json:"base_url"`
@@ -37,6 +38,7 @@ func (a *AppConfig) loadConfigFromFile(file string) {
 
 }
 
+// NewAppConfig - AppConfig constructor
 func NewAppConfig() *AppConfig {
 
 	a := AppConfig{}

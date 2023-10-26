@@ -21,6 +21,7 @@ type (
 	}
 )
 
+// Write
 func (r *loggingResponseWriter) Write(b []byte) (int, error) {
 	// записываем ответ, используя оригинальный http.ResponseWriter
 	size, err := r.ResponseWriter.Write(b)
@@ -28,18 +29,22 @@ func (r *loggingResponseWriter) Write(b []byte) (int, error) {
 	return size, err
 }
 
+// WriteHeader -
 func (r *loggingResponseWriter) WriteHeader(statusCode int) {
 	// записываем код статуса, используя оригинальный http.ResponseWriter
 	r.ResponseWriter.WriteHeader(statusCode)
 	r.responseData.status = statusCode // захватываем код статуса
 }
 
+// ZapLogger *zap.Logger
 var ZapLogger *zap.Logger
 
+// InitLogger конструктор
 func InitLogger() {
 	ZapLogger, _ = zap.NewDevelopment()
 }
 
+// Logger логирование
 func Logger(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

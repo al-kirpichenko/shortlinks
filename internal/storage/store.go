@@ -6,8 +6,10 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 )
 
+// ErrConflict - для ошибок вставки
 var ErrConflict = errors.New("conflict on inserting new record")
 
+// Storage интерфейс хранилища
 type Storage interface {
 	Insert(link *models.Link) error
 	InsertLinks(links []*models.Link) error

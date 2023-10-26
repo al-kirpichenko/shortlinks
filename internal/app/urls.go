@@ -11,11 +11,13 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
+// RespURLs - структура ответа
 type RespURLs struct {
 	Short    string `json:"short_url"`
 	Original string `json:"original_url"`
 }
 
+// APIGetUserURLs - хендлер, возвращающий все URL пользователя
 func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	var links []RespURLs

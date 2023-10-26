@@ -23,14 +23,17 @@ func newCompressWriter(w http.ResponseWriter) *compressWriter {
 	}
 }
 
+// Header returns the header map that will be sent by WriteHeader.
 func (c *compressWriter) Header() http.Header {
 	return c.w.Header()
 }
 
+// Write  writes a compressed form of p to the underlying io.Writer
 func (c *compressWriter) Write(p []byte) (int, error) {
 	return c.zw.Write(p)
 }
 
+// WriteHeader return header
 func (c *compressWriter) WriteHeader(statusCode int) {
 	if statusCode < 300 {
 		c.w.Header().Set("Content-Encoding", "gzip")
@@ -62,6 +65,7 @@ func newCompressReader(r io.ReadCloser) (*compressReader, error) {
 	}, nil
 }
 
+// Read
 func (c compressReader) Read(p []byte) (n int, err error) {
 	return c.zr.Read(p)
 }
@@ -73,6 +77,7 @@ func (c *compressReader) Close() error {
 	return c.zr.Close()
 }
 
+// Gzip работа с gzip
 func Gzip(h http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// по умолчанию устанавливаем оригинальный http.ResponseWriter как тот,

@@ -7,6 +7,7 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
+// App основная структура приложения
 type App struct {
 	cfg     *config.AppConfig
 	DB      *pg.PG
@@ -14,6 +15,7 @@ type App struct {
 	Channel chan *delurls.Task
 }
 
+// App конструктор
 func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{

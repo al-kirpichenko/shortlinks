@@ -11,16 +11,19 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/models"
 )
 
+// Link - хранилище
 type Link struct {
 	Store *pg.PG
 }
 
+// NewLinkStorage - конструктор
 func NewLinkStorage(db *pg.PG) *Link {
 	return &Link{
 		Store: db,
 	}
 }
 
+// CreateTable - создает таблицу в бд, если ее нет
 func (l *Link) CreateTable() error {
 
 	if _, err := l.Store.DB.Exec("CREATE TABLE IF NOT EXISTS links (id SERIAL PRIMARY KEY , userid CHAR (255) NULL, short CHAR (20) UNIQUE, original CHAR (255) UNIQUE, deleted BOOLEAN DEFAULT FALSE );"); err != nil {
@@ -29,6 +32,7 @@ func (l *Link) CreateTable() error {
 	return nil
 }
 
+// Insert - вставка записи в таблицу
 func (l *Link) Insert(link *models.Link) error {
 	if err := l.CreateTable(); err != nil {
 		return err
@@ -47,6 +51,7 @@ func (l *Link) Insert(link *models.Link) error {
 	return nil
 }
 
+// InsertLinks - массовая вставка
 func (l *Link) InsertLinks(links []*models.Link) error {
 	if err := l.CreateTable(); err != nil {
 		return err
@@ -73,6 +78,7 @@ func (l *Link) InsertLinks(links []*models.Link) error {
 	return tx.Commit()
 }
 
+// GetOriginal - получение оригинального url по короткому
 func (l *Link) GetOriginal(short string) (*models.Link, error) {
 
 	link := &models.Link{
@@ -85,6 +91,7 @@ func (l *Link) GetOriginal(short string) (*models.Link, error) {
 	return link, nil
 }
 
+// GetShort получение короткого по оригинальному
 func (l *Link) GetShort(original string) (*models.Link, error) {
 
 	link := models.Link{
@@ -97,6 +104,7 @@ func (l *Link) GetShort(original string) (*models.Link, error) {
 	return &link, nil
 }
 
+// GetAllByUserID - получение всех записей пользователя
 func (l *Link) GetAllByUserID(userID string) ([]models.Link, error) {
 
 	var links []models.Link
@@ -126,6 +134,7 @@ func (l *Link) GetAllByUserID(userID string) ([]models.Link, error) {
 	return links, nil
 }
 
+// DelURL удаление записей
 func (l *Link) DelURL(shortURLs []string) error {
 	tx, err := l.Store.DB.Begin()
 	if err != nil {

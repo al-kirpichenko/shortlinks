@@ -12,6 +12,7 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 )
 
+// Router - http роутер
 func Router(app *app.App) http.Handler {
 
 	router := chi.NewRouter()
