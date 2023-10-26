@@ -2,7 +2,6 @@ package delurls
 
 import (
 	"fmt"
-	"os"
 
 	"go.uber.org/zap"
 
@@ -51,10 +50,9 @@ func NewWorker(id int, queue *Queue, resizer *Deleter) *Worker {
 	return &w
 }
 
-func (w *Worker) Loop(sigint chan os.Signal) {
-	var shutdown bool
+func (w *Worker) Loop() {
 
-	for !shutdown {
+	for {
 
 		t := w.queue.PopWait()
 
@@ -66,10 +64,6 @@ func (w *Worker) Loop(sigint chan os.Signal) {
 
 		fmt.Printf("worker #%d deleted urls\n", w.id)
 
-		if <-sigint; true {
-			shutdown = true
-			fmt.Printf("workers GRACEFULLY\n")
-		}
 	}
 }
 

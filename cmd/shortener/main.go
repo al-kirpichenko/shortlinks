@@ -59,7 +59,7 @@ func main() {
 
 	//for i := 0; i < runtime.NumCPU(); i++ {
 	w := delurls.NewWorker(1, queue, delurls.NewDeleter(newApp.Storage))
-	go w.Loop(sigint)
+	go w.Loop()
 	//}
 
 	// запускаем горутину обработки пойманных прерываний
@@ -73,6 +73,7 @@ func main() {
 			// ошибки закрытия Listener
 			log.Printf("HTTP server Shutdown: %v", err)
 		}
+		close(newApp.Channel)
 		// сообщаем основному потоку,
 		// что все сетевые соединения обработаны и закрыты
 		close(idleConnsClosed)
