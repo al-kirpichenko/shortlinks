@@ -38,7 +38,9 @@ func main() {
 
 	newApp.ConfigureStorage()
 
-	newApp.Channel = make(chan *delurls.Task, 1000)
+	newApp.Worker = delurls.NewWorker(delurls.NewDeleter(newApp.Storage))
+
+	go newApp.Worker.Run()
 
 	srv := &http.Server{
 		Addr:    conf.Host,
@@ -52,9 +54,6 @@ func main() {
 	// регистрируем перенаправление прерываний
 	signal.Notify(sigint, os.Interrupt, syscall.SIGQUIT, syscall.SIGTERM)
 
-	w := delurls.NewWorker(newApp.Channel, delurls.NewDeleter(newApp.Storage))
-	go w.Loop()
-
 	// запускаем горутину обработки пойманных прерываний
 	go func() {
 		// читаем из канала прерываний
@@ -65,7 +64,7 @@ func main() {
 			// ошибки закрытия Listener
 			log.Printf("HTTP server Shutdown: %v", err)
 		}
-		close(newApp.Channel)
+		newApp.Worker.Stop()
 		// сообщаем основному потоку,
 		// что все сетевые соединения обработаны и закрыты
 		close(idleConnsClosed)

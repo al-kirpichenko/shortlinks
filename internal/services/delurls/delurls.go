@@ -2,6 +2,7 @@ package delurls
 
 import (
 	"fmt"
+	"sync"
 
 	"go.uber.org/zap"
 
@@ -17,23 +18,41 @@ type Task struct {
 
 // Worker воркер
 type Worker struct {
-	channel chan *Task
-	deleter *Deleter
+	Channel   chan *Task
+	deleter   *Deleter
+	WaitGroup sync.WaitGroup
 }
 
 // NewWorker конструктор воркеров
-func NewWorker(channel chan *Task, deleter *Deleter) *Worker {
+func NewWorker(deleter *Deleter) *Worker {
 	w := Worker{
-		channel: channel,
 		deleter: deleter,
 	}
 	return &w
 }
 
+// Run старт воркера
+func (w *Worker) Run() {
+
+	w.Channel = make(chan *Task, 1000)
+	w.WaitGroup.Add(1)
+
+	go func() {
+		w.Loop()
+		w.WaitGroup.Done()
+	}()
+}
+
+func (w *Worker) Stop() {
+	close(w.Channel)
+	w.WaitGroup.Wait()
+}
+
 // PopWait - получение задачи из очереди
-func (w *Worker) PopWait() *Task {
+func (w *Worker) PopWait() (*Task, bool) {
 	// получаем задачу
-	return <-w.channel
+	task, ok := <-w.Channel
+	return task, ok
 }
 
 // Loop -
@@ -41,7 +60,11 @@ func (w *Worker) Loop() {
 
 	for {
 
-		t := w.PopWait()
+		t, ok := w.PopWait()
+
+		if !ok {
+			break
+		}
 
 		err := w.deleter.Delete(t.URLs)
 		if err != nil {

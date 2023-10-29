@@ -12,10 +12,10 @@ type App struct {
 	cfg     *config.AppConfig
 	DB      *pg.PG
 	Storage storage.Storage
-	Channel chan *delurls.Task
+	Worker  *delurls.Worker
 }
 
-// App конструктор
+// NewApp конструктор
 func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{
