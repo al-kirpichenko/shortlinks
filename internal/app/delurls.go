@@ -31,7 +31,7 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	a.Channel <- &delurls.Task{
+	a.Worker.Channel <- &delurls.Task{
 		UserID: userID,
 		URLs:   shorts,
 	}
