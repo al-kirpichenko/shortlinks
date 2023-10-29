@@ -43,6 +43,7 @@ func (w *Worker) Run() {
 	}()
 }
 
+// Stop остановка воркера
 func (w *Worker) Stop() {
 	close(w.Channel)
 	w.WaitGroup.Wait()
