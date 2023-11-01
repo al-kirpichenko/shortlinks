@@ -14,10 +14,12 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
+// Request - структура запроса
 type Request struct {
 	URL string `json:"url"`
 }
 
+// Response - структура ответа
 type Response struct {
 	Result string `json:"result"`
 }

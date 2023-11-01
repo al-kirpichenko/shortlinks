@@ -13,11 +13,13 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
+// Req - структура запроса
 type Req struct {
 	ID  string `json:"correlation_id"`
 	URL string `json:"original_url"`
 }
 
+// Resp - структура ответа
 type Resp struct {
 	ID    string `json:"correlation_id"`
 	Short string `json:"short_url"`

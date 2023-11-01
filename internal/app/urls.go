@@ -11,27 +11,23 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
+// RespURLs - структура ответа
 type RespURLs struct {
 	Short    string `json:"short_url"`
 	Original string `json:"original_url"`
 }
 
-// APIGetUserURLs в теле запроса принимает список идентификаторов сокращённых URL для асинхронного удаления:
-// формат: ["6qxTVvsy", "RTfd56hn", "Jlfd67ds"]
+// APIGetUserURLs - хендлер, возвращающий все URL пользователя
 func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	var links []RespURLs
 
 	token := r.Context().Value(cookies.ContextUserKey).(string)
 
-	log.Println(token)
-
 	userID, err := userid.GetUserID(token)
 	if err != nil {
 		userID = ""
 	}
-
-	log.Println(userID)
 
 	userURLs, err := a.Storage.GetAllByUserID(userID)
 

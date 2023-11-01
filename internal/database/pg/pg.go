@@ -7,17 +7,20 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+// PG - структура бд
 type PG struct {
 	databaseConf string
 	DB           *sql.DB
 }
 
+// NewDB конструктор
 func NewDB(conf string) *PG {
 	return &PG{
 		databaseConf: conf,
 	}
 }
 
+// InitDB - инициализация
 func InitDB(conn string) *PG {
 	if conn == "" {
 		return nil
@@ -36,6 +39,7 @@ func InitDB(conn string) *PG {
 	return db
 }
 
+// Open - открытие соединения с бд
 func (pg *PG) Open() error {
 
 	db, err := sql.Open("pgx", pg.databaseConf)
@@ -53,12 +57,14 @@ func (pg *PG) Open() error {
 	return nil
 }
 
+// Close - закрытие соединения
 func (pg *PG) Close() {
 	if pg.DB != nil {
 		pg.DB.Close()
 	}
 }
 
+// PingDB - пинг бд
 func (pg *PG) PingDB() error {
 	if err := pg.DB.Ping(); err != nil {
 		log.Println("don't ping Database")

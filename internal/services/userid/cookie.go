@@ -9,6 +9,7 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/services/jwtstringbuilder"
 )
 
+// GetUserID - получает ID пользователя из токена
 func GetUserID(tokenString string) (string, error) {
 	// создаём экземпляр структуры с утверждениями
 
@@ -27,6 +28,7 @@ func GetUserID(tokenString string) (string, error) {
 	return claims.UserID, nil
 }
 
+// ValidationToken - валидация токена
 func ValidationToken(tokenString string) bool {
 
 	claims := &jwtstringbuilder.Claims{}

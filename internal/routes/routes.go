@@ -12,6 +12,7 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 )
 
+// Router - http роутер
 func Router(app *app.App) http.Handler {
 
 	router := chi.NewRouter()
@@ -24,8 +25,8 @@ func Router(app *app.App) http.Handler {
 	router.Get("/ping", app.Ping)
 	router.Post("/", app.GetShortURL)
 	router.Post("/api/shorten", app.APIGetShortURL)
-	router.Post("/api/shorten/batch", app.APIBatch)
 	router.Get("/api/user/urls", app.APIGetUserURLs)
+	router.Post("/api/shorten/batch", app.APIBatch)
 	router.Delete("/api/user/urls", app.APIDelUserURLs)
 	router.Mount("/debug", middle.Profiler())
 

@@ -3,19 +3,19 @@ package app
 import (
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/database/pg"
+	"github.com/al-kirpichenko/shortlinks/internal/services/delurls"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
-type contextKey string
-
-const Token contextKey = "token"
-
+// App основная структура приложения
 type App struct {
 	cfg     *config.AppConfig
 	DB      *pg.PG
 	Storage storage.Storage
+	Worker  *delurls.Worker
 }
 
+// NewApp конструктор
 func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{
@@ -24,6 +24,7 @@ func NewApp(cfg *config.AppConfig) *App {
 	}
 }
 
+// ConfigureStorage - конфигуратор хранилища
 func (a *App) ConfigureStorage() {
 
 	switch {

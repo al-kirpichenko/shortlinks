@@ -87,3 +87,72 @@ func Test_APIGetShortURL(t *testing.T) {
 	}
 
 }
+
+func BenchmarkAPIGetShortURL(b *testing.B) {
+	type want struct {
+		code        int
+		contentType string
+	}
+
+	tests := []struct {
+		name   string
+		method string
+		body   string
+		want   want
+	}{
+		{
+			name:   "test#1-ok",
+			method: http.MethodPost,
+			body:   `{"url": "https://yandex.ru"}`,
+			want: want{
+				code:        201,
+				contentType: "application/json",
+			},
+		},
+		{
+			name:   "test#-fail",
+			method: http.MethodPost,
+			body:   "sdfqwed",
+			want: want{
+				code:        400,
+				contentType: "text/plain; charset=utf-8",
+			},
+		},
+	}
+
+	conf := &config.AppConfig{
+		Host:      "localhost:8080",
+		ResultURL: "http://localhost:8080",
+		FilePATH:  "/tmp/short-url-db.json",
+	}
+
+	app := NewApp(conf)
+	app.ConfigureStorage()
+
+	userID := uuid.New().String()
+
+	cookieString, err := jwtstringbuilder.BuildJWTSting(userID)
+	if err != nil {
+		log.Println("Don't create cookie string")
+	}
+
+	for _, test := range tests {
+		b.Run(test.name, func(b *testing.B) {
+
+			r := httptest.NewRequest(test.method, "https://localhost:8080/api/shorten", strings.NewReader(test.body))
+
+			ctx := context.WithValue(r.Context(), cookies.ContextUserKey, cookieString)
+
+			w := httptest.NewRecorder()
+
+			router := chi.NewRouteContext()
+
+			r = r.WithContext(context.WithValue(ctx, chi.RouteCtxKey, router))
+
+			app.APIGetShortURL(w, r)
+
+			assert.Equal(b, test.want.code, w.Code, "Код ответа не совпадает с ожидаемым")
+			assert.Equal(b, test.want.contentType, w.Header().Get("Content-Type"), "Тип контента не совпадает с ожидаемым")
+		})
+	}
+}

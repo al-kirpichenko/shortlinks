@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"go.uber.org/zap"
-
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/cookies"
-	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
+	"github.com/al-kirpichenko/shortlinks/internal/services/delurls"
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
+// APIDelUserURLs в теле запроса принимает список идентификаторов сокращённых URL для асинхронного удаления:
+// формат: ["6qxTVvsy", "RTfd56hn", "Jlfd67ds"]
 func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	var shorts []string
@@ -19,21 +19,21 @@ func (a *App) APIDelUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	userID, err := userid.GetUserID(token)
 	if err != nil {
-		userID = ""
-	}
-
-	err = json.NewDecoder(r.Body).Decode(&shorts)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
 		return
 	}
 
-	go func(urls []string, userID string) {
-		if err := a.Storage.DelURL(urls, userID); err != nil {
-			logger.ZapLogger.Error("don't delete urls", zap.Error(err))
-		}
-	}(shorts, userID)
-
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
+
+	err = json.NewDecoder(r.Body).Decode(&shorts)
+	if err != nil {
+		return
+	}
+
+	a.Worker.Channel <- &delurls.Task{
+		UserID: userID,
+		URLs:   shorts,
+	}
 
 }

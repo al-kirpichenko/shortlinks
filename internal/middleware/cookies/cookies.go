@@ -11,10 +11,13 @@ import (
 	"github.com/al-kirpichenko/shortlinks/internal/services/userid"
 )
 
+// ContextKey тип для токена
 type ContextKey string
 
+// ContextUserKey - токен
 const ContextUserKey ContextKey = "token"
 
+// createToken - создание токена
 func createToken() (string, error) {
 
 	userID := uuid.New().String()
@@ -26,6 +29,7 @@ func createToken() (string, error) {
 
 }
 
+// Cookies - работа с куками
 func Cookies(h http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -36,6 +40,10 @@ func Cookies(h http.Handler) http.Handler {
 
 		if err != nil {
 
+			if r.RequestURI == "/api/user/urls" {
+				http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
+				return
+			}
 			token, err = createToken()
 
 			if err != nil {
