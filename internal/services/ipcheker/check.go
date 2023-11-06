@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// CheckIP -
 func CheckIP(r *http.Request, trustedSubnet string) bool {
 	ip := strings.Split(r.Header.Get("X-Real-IP"), ":")[0]
 	_, ipNet, err := net.ParseCIDR(trustedSubnet)
