@@ -17,4 +17,6 @@ type Storage interface {
 	GetShort(original string) (*models.Link, error)
 	GetAllByUserID(userID string) ([]models.Link, error)
 	DelURL(shortURLs []string) error
+	GetCountURLs() (int, error)
+	GetCountUsers() (int, error)
 }
