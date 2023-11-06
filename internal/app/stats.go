@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/al-kirpichenko/shortlinks/internal/services/IPCheker"
+	"github.com/al-kirpichenko/shortlinks/internal/services/ipcheker"
 )
 
+// Stat -
 type Stat struct {
 	URLs  int `json:"urls"`
 	Users int `json:"users"`
@@ -14,11 +15,11 @@ type Stat struct {
 
 // APIStats - возвращает статистику сервиса
 // в виде json объекта:
-// {
-//  "urls": <int>, // количество сокращённых URL в сервисе
-//  "users": <int> // количество пользователей в сервисе
-// }
-
+//
+//	{
+//	 "urls": <int>, // количество сокращённых URL в сервисе
+//	 "users": <int> // количество пользователей в сервисе
+//	}
 func (a *App) APIStats(w http.ResponseWriter, r *http.Request) {
 
 	var (
@@ -26,7 +27,7 @@ func (a *App) APIStats(w http.ResponseWriter, r *http.Request) {
 		err                 error
 	)
 
-	if !IPCheker.CheckIP(r, a.cfg.TrustedSubnet) {
+	if !ipcheker.CheckIP(r, a.cfg.TrustedSubnet) {
 		http.Error(w, "Досут из недоверенной сети", http.StatusForbidden)
 		return
 	}

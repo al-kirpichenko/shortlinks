@@ -1,4 +1,4 @@
-package IPCheker
+package ipcheker
 
 import (
 	"net"
