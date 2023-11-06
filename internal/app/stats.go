@@ -3,6 +3,8 @@ package app
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/al-kirpichenko/shortlinks/internal/services/IPCheker"
 )
 
 type Stat struct {
@@ -17,12 +19,17 @@ type Stat struct {
 //  "users": <int> // количество пользователей в сервисе
 // }
 
-func (a *App) APIStats(w http.ResponseWriter, _ *http.Request) {
+func (a *App) APIStats(w http.ResponseWriter, r *http.Request) {
 
 	var (
 		statURLs, statUsers int
 		err                 error
 	)
+
+	if !IPCheker.CheckIP(r, a.cfg.TrustedSubnet) {
+		http.Error(w, "Досут из недоверенной сети", http.StatusForbidden)
+		return
+	}
 
 	statURLs, err = a.Storage.GetCountURLs()
 
