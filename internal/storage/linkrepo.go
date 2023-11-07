@@ -171,3 +171,8 @@ func (l *Link) GetCountUsers() (int, error) {
 	_ = l.Store.DB.QueryRow("SELECT COUNT(DISTINCT userid) FROM links").Scan(&count)
 	return count, nil
 }
+
+// Ping -
+func (l *Link) Ping() error {
+	return l.Store.PingDB()
+}

@@ -87,3 +87,8 @@ func (s *InMemoryStorage) GetCountURLs() (int, error) {
 func (s *InMemoryStorage) GetCountUsers() (int, error) {
 	return 0, nil
 }
+
+// Ping -
+func (s *InMemoryStorage) Ping() error {
+	return nil
+}

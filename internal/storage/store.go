@@ -19,4 +19,5 @@ type Storage interface {
 	DelURL(shortURLs []string) error
 	GetCountURLs() (int, error)
 	GetCountUsers() (int, error)
+	Ping() error
 }

@@ -112,3 +112,8 @@ func (fs *FileStorage) GetCountURLs() (int, error) {
 func (fs *FileStorage) GetCountUsers() (int, error) {
 	return 0, nil
 }
+
+// Ping -
+func (fs *FileStorage) Ping() error {
+	return nil
+}

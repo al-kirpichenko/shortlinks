@@ -18,7 +18,7 @@ type ContextKey string
 const ContextUserKey ContextKey = "token"
 
 // createToken - создание токена
-func createToken() (string, error) {
+func CreateToken() (string, error) {
 
 	userID := uuid.New().String()
 	token, err := jwtstringbuilder.BuildJWTSting(userID)
@@ -44,7 +44,7 @@ func Cookies(h http.Handler) http.Handler {
 				http.Error(w, "user id not found in cookie", http.StatusUnauthorized)
 				return
 			}
-			token, err = createToken()
+			token, err = CreateToken()
 
 			if err != nil {
 				http.Error(w, "Try later..", http.StatusInternalServerError)
@@ -64,7 +64,7 @@ func Cookies(h http.Handler) http.Handler {
 		if !userid.ValidationToken(userCookie.Value) {
 
 			logger.ZapLogger.Error("token is not valid")
-			token, err = createToken()
+			token, err = CreateToken()
 
 			if err != nil {
 				http.Error(w, "Try later..", http.StatusInternalServerError)
