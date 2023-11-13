@@ -31,7 +31,7 @@ func (s *Server) ShortURLBatch(_, req *ShortURLBatchRequest) (*ShortURLBatchResp
 		key := keygen.GenerateKey()
 		resp := &BatchResponse{
 			CorrelationId: url.CorrelationId,
-			ResultUrl:     fmt.Sprintf(s.Cfg.ResultURL+"/%s", key),
+			ResultUrl:     fmt.Sprintf(s.App.Cfg.ResultURL+"/%s", key),
 		}
 		link := &models.Link{
 			Short:    key,
