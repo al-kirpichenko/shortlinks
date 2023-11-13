@@ -27,7 +27,7 @@ func (a *App) APIStats(w http.ResponseWriter, r *http.Request) {
 		err                 error
 	)
 
-	if !ipcheker.CheckIP(r, a.cfg.TrustedSubnet) {
+	if !ipcheker.CheckIP(r, a.Cfg.TrustedSubnet) {
 		http.Error(w, "Досут из недоверенной сети", http.StatusForbidden)
 		return
 	}

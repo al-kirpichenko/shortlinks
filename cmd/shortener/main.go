@@ -41,7 +41,7 @@ func main() {
 
 	newApp.Worker = delurls.NewWorker(delurls.NewDeleter(newApp.Storage))
 
-	GRPCServer := gr.NewServer(newApp.Storage)
+	GRPCServer := gr.NewServer(newApp.Storage, newApp.Cfg)
 
 	go newApp.Worker.Run()
 

@@ -68,7 +68,7 @@ func (a *App) APIBatch(w http.ResponseWriter, r *http.Request) {
 		key := keygen.GenerateKey()
 		resp := Resp{
 			ID:    val.ID,
-			Short: fmt.Sprintf(a.cfg.ResultURL+"/%s", key),
+			Short: fmt.Sprintf(a.Cfg.ResultURL+"/%s", key),
 		}
 		link := &models.Link{
 			Short:    key,
