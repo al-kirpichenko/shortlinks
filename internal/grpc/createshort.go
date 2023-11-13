@@ -14,7 +14,7 @@ import (
 )
 
 // CreateShortURL -
-func (s *Server) CreateShortURL(_, req *CreateShortURLRequest) (*CreateShortURLResponse, error) {
+func (s *Server) CreateShortURL(_, req *ShortURLRequest) (*ShortURLResponse, error) {
 
 	url := req.Url
 
@@ -46,7 +46,7 @@ func (s *Server) CreateShortURL(_, req *CreateShortURLRequest) (*CreateShortURLR
 			return nil, status.Errorf(codes.Internal, "Internal error")
 		}
 	}
-	return &CreateShortURLResponse{
+	return &ShortURLResponse{
 		ShortUrl: link.Short,
 	}, nil
 }

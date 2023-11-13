@@ -6,20 +6,20 @@ option go_package = "internal/grpc";
 
 
 service Shortener {
-  rpc CreateShortURL(CreateShortURLRequest) returns(CreateShortURLResponse);
+  rpc ShortURL(ShortURLRequest) returns(ShortURLResponse);
   rpc Ping(PingRequest) returns(PingResponse);
-  rpc CreateShortURLBatch(CreateShortURLBatchRequest) returns(CreateShortURLBatchResponse);
-  rpc GetOriginalURL(GetOriginalURLRequest) returns(GetOriginalURLResponse);
-  rpc GetUserURLs(GetUserURLsRequest) returns(GetUserURLsResponse);
+  rpc ShortURLBatch(ShortURLBatchRequest) returns(ShortURLBatchResponse);
+  rpc GetOriginalURL(OriginalURLRequest) returns(OriginalURLResponse);
+  rpc GetUserURLs(UserURLsRequest) returns(UserURLsResponse);
   rpc DeleteURLs(DeleteURLsRequest) returns(DeleteURLsResponse);
 }
 
-message CreateShortURLRequest {
+message ShortURLRequest {
   string url = 1;
   string user_id = 2;
 }
 
-message CreateShortURLResponse {
+message ShortURLResponse {
   string short_url = 1;
 }
 
@@ -29,49 +29,49 @@ message PingResponse {
   string result = 1;
 }
 
-message CreateShortURLBatchRequest {
-  repeated OriginalURLs urls = 1;
+message OriginalURLRequest {
+  string short = 1;
+}
+message OriginalURLResponse {
+  string original = 1;
+}
+
+message BatchRequest {
+  string correlation_id = 1;
+  string original_url = 2;
+}
+
+message BatchResponse {
+  string correlation_id = 1;
+  string result_url = 2;
+}
+
+message ShortURLBatchRequest {
+  repeated BatchRequest urls = 1;
   string user_id = 2;
 }
 
-message OriginalURLs {
-  string correlation_id = 1;
-  string original_url = 2;
+message ShortURLBatchResponse {
+  repeated BatchResponse urls = 1;
 }
 
-message CreateShortURLBatchResponse {
-  repeated ShortURLs urls = 1;
-}
-
-message ShortURLs {
-  string correlation_id = 1;
-  string short_url = 2;
-}
-
-message GetOriginalURLRequest {
-  string short_url = 1;
-}
-
-message GetOriginalURLResponse {
-  string original_url = 1;
-}
-
-message GetUserURLsRequest {
+message UserURLsRequest {
   string user_id = 1;
 }
 
-message GetUserURLsResponse {
-  repeated UserUrls urls = 1;
-}
-
-message UserUrls {
-  string short_url = 1;
-  string original_url = 2;
+message UserURLsResponse {
+  string short = 1;
+  string original = 2;
 }
 
 message DeleteURLsRequest {
-  string short_url = 1;
+  repeated string shorts = 1;
+  string user_id = 2;
 }
+
 message DeleteURLsResponse {
   string result = 1;
 }
+
+
+
