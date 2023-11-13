@@ -6,7 +6,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
+	"github.com/al-kirpichenko/shortlinks/internal/app"
 	"github.com/al-kirpichenko/shortlinks/internal/storage"
 )
 
@@ -14,14 +14,14 @@ type Server struct {
 	UnimplementedShortenerServer
 	Storage storage.Storage
 	Server  *grpc.Server
-	Cfg     *config.AppConfig
+	App     *app.App
 }
 
-func NewServer(storage storage.Storage, cfg *config.AppConfig) *Server {
+func NewServer(storage storage.Storage, app *app.App) *Server {
 	return &Server{
 		Storage: storage,
 		Server:  grpc.NewServer(),
-		Cfg:     cfg,
+		App:     app,
 	}
 }
 
