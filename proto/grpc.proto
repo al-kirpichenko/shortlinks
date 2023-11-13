@@ -59,9 +59,13 @@ message UserURLsRequest {
   string user_id = 1;
 }
 
-message UserURLsResponse {
+message URLsResponse {
   string short = 1;
   string original = 2;
+}
+
+message UserURLsResponse {
+  repeated URLsResponse urls = 1;
 }
 
 message DeleteURLsRequest {
