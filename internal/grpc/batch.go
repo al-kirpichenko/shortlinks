@@ -22,7 +22,7 @@ func (s *Server) ShortURLBatch(_, req *ShortURLBatchRequest) (*ShortURLBatchResp
 
 	userID = req.UserId
 
-	if len(userID) == 0 {
+	if userID == "" {
 		userID = uuid.New().String()
 	}
 
