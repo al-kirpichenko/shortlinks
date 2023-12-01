@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"go.uber.org/zap"
+
 	"github.com/al-kirpichenko/shortlinks/internal/services/ipcheker"
 )
 
@@ -63,6 +65,7 @@ func (a *App) APIStats(w http.ResponseWriter, r *http.Request) {
 
 	_, err = w.Write(response)
 	if err != nil {
+		zap.L().Error("error", zap.Error(err))
 		return
 	}
 
