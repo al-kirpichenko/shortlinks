@@ -74,10 +74,11 @@ func main() {
 			// ошибки закрытия Listener
 			log.Printf("HTTP server Shutdown: %v", err)
 		}
-		newApp.Worker.Stop()
 
 		//gracefully shutdown GRPCServer
 		GRPCServer.Stop()
+		newApp.Worker.Stop()
+
 		// сообщаем основному потоку,
 		// что все сетевые соединения обработаны и закрыты
 		close(idleConnsClosed)
