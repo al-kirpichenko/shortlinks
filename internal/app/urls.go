@@ -43,7 +43,7 @@ func (a *App) APIGetUserURLs(w http.ResponseWriter, r *http.Request) {
 
 	for _, val := range userURLs {
 		resp := RespURLs{
-			Short:    strings.TrimSpace(fmt.Sprintf(a.cfg.ResultURL+"/%s", val.Short)),
+			Short:    strings.TrimSpace(fmt.Sprintf(a.Cfg.ResultURL+"/%s", val.Short)),
 			Original: strings.TrimSpace(val.Original),
 		}
 

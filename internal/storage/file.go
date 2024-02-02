@@ -102,3 +102,18 @@ func (fs *FileStorage) GetAllByUserID(userID string) ([]models.Link, error) {
 func (fs *FileStorage) DelURL(shortURLs []string) error {
 	return nil
 }
+
+// GetCountURLs - возвращает число записей в таблице
+func (fs *FileStorage) GetCountURLs() (int, error) {
+	return 0, nil
+}
+
+// GetCountUsers - возвращает число записей в таблице
+func (fs *FileStorage) GetCountUsers() (int, error) {
+	return 0, nil
+}
+
+// Ping -
+func (fs *FileStorage) Ping() error {
+	return nil
+}

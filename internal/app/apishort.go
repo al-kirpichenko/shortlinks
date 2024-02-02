@@ -68,7 +68,7 @@ func (a *App) APIGetShortURL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	result := Response{
-		Result: a.cfg.ResultURL + "/" + link.Short,
+		Result: a.Cfg.ResultURL + "/" + link.Short,
 	}
 
 	response, err := json.Marshal(result)

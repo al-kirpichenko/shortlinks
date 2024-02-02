@@ -9,7 +9,7 @@ import (
 
 // App основная структура приложения
 type App struct {
-	cfg     *config.AppConfig
+	Cfg     *config.AppConfig
 	DB      *pg.PG
 	Storage storage.Storage
 	Worker  *delurls.Worker
@@ -19,7 +19,7 @@ type App struct {
 func NewApp(cfg *config.AppConfig) *App {
 
 	return &App{
-		cfg: cfg,
+		Cfg: cfg,
 		DB:  pg.InitDB(cfg.DataBaseString),
 	}
 }
@@ -28,10 +28,10 @@ func NewApp(cfg *config.AppConfig) *App {
 func (a *App) ConfigureStorage() {
 
 	switch {
-	case a.cfg.DataBaseString != "":
+	case a.Cfg.DataBaseString != "":
 		a.Storage = storage.NewLinkStorage(a.DB)
-	case a.cfg.FilePATH != "":
-		a.Storage = storage.NewFileStorage(a.cfg.FilePATH)
+	case a.Cfg.FilePATH != "":
+		a.Storage = storage.NewFileStorage(a.Cfg.FilePATH)
 	default:
 		a.Storage = storage.NewInMemoryStorage()
 	}

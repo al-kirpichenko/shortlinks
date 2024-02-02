@@ -13,6 +13,7 @@ import (
 
 	"github.com/al-kirpichenko/shortlinks/cmd/shortener/config"
 	"github.com/al-kirpichenko/shortlinks/internal/app"
+	gr "github.com/al-kirpichenko/shortlinks/internal/grpc"
 	"github.com/al-kirpichenko/shortlinks/internal/middleware/logger"
 	"github.com/al-kirpichenko/shortlinks/internal/routes"
 	"github.com/al-kirpichenko/shortlinks/internal/services/delurls"
@@ -40,7 +41,16 @@ func main() {
 
 	newApp.Worker = delurls.NewWorker(delurls.NewDeleter(newApp.Storage))
 
+	GRPCServer := gr.NewServer(newApp.Storage, newApp)
+
 	go newApp.Worker.Run()
+
+	go func() {
+		err := gr.Run(GRPCServer)
+		if err != nil {
+			log.Fatal("GRPC server not started", err)
+		}
+	}()
 
 	srv := &http.Server{
 		Addr:    conf.Host,
@@ -64,7 +74,11 @@ func main() {
 			// ошибки закрытия Listener
 			log.Printf("HTTP server Shutdown: %v", err)
 		}
+
+		//gracefully shutdown GRPCServer
+		GRPCServer.Stop()
 		newApp.Worker.Stop()
+
 		// сообщаем основному потоку,
 		// что все сетевые соединения обработаны и закрыты
 		close(idleConnsClosed)

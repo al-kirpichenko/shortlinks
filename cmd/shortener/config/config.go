@@ -22,6 +22,7 @@ type AppConfig struct {
 	DataBaseString string `env:"DATABASE_DSN" json:"database_dsn"`
 	EnableHTTPS    bool   `env:"ENABLE_HTTPS" json:"enable_https"`
 	ConfigJSON     string `env:"CONFIG" json:"-"`
+	TrustedSubnet  string `env:"TRUSTED_SUBNET" json:"trusted_subnet"`
 }
 
 func (a *AppConfig) loadConfigFromFile(file string) {
@@ -49,6 +50,7 @@ func NewAppConfig() *AppConfig {
 	flag.StringVar(&a.DataBaseString, "d", "", "it's conn string")
 	flag.BoolVar(&a.EnableHTTPS, "s", false, "using HTTPS")
 	flag.StringVar(&a.ConfigJSON, "c", "", "It's a ConfigJSON file")
+	flag.StringVar(&a.TrustedSubnet, "t", "", "It's a Trusted Subnet")
 
 	flag.Parse()
 
@@ -76,6 +78,9 @@ func NewAppConfig() *AppConfig {
 		}
 		if j.EnableHTTPS {
 			a.EnableHTTPS = true
+		}
+		if a.TrustedSubnet == "" && j.TrustedSubnet != "" {
+			a.TrustedSubnet = j.TrustedSubnet
 		}
 
 	}

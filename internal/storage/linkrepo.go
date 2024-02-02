@@ -157,3 +157,22 @@ func (l *Link) DelURL(shortURLs []string) error {
 	}
 	return tx.Commit()
 }
+
+// GetCountURLs - возвращает количество URl в бвзе
+func (l *Link) GetCountURLs() (int, error) {
+	var count int
+	_ = l.Store.DB.QueryRow("select count(*) from links").Scan(&count)
+	return count, nil
+}
+
+// GetCountUsers - возвращает количество уникальных пользователей
+func (l *Link) GetCountUsers() (int, error) {
+	var count int
+	_ = l.Store.DB.QueryRow("SELECT COUNT(DISTINCT userid) FROM links").Scan(&count)
+	return count, nil
+}
+
+// Ping -
+func (l *Link) Ping() error {
+	return l.Store.PingDB()
+}

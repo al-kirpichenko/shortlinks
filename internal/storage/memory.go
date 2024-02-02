@@ -77,3 +77,18 @@ func (s *InMemoryStorage) GetAllByUserID(userID string) ([]models.Link, error) {
 func (s *InMemoryStorage) DelURL(shortURLs []string) error {
 	return nil
 }
+
+// GetCountURLs - возвращает число записей в таблице
+func (s *InMemoryStorage) GetCountURLs() (int, error) {
+	return 0, nil
+}
+
+// GetCountUsers - возвращает число записей в таблице
+func (s *InMemoryStorage) GetCountUsers() (int, error) {
+	return 0, nil
+}
+
+// Ping -
+func (s *InMemoryStorage) Ping() error {
+	return nil
+}
